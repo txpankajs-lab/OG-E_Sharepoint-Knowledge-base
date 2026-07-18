@@ -1,0 +1,3158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OGE University — QA Knowledge Centre</title>
+<style>
+  :root{
+    --navy:#0B1F3A;
+    --navy-2:#122A4D;
+    --teal:#0E7C86;
+    --teal-light:#14A3A3;
+    --gold:#D4A94C;
+    --off-white:#F7F8FA;
+    --paper:#FFFFFF;
+    --ink:#1B2430;
+    --ink-soft:#5B6472;
+    --line:#E4E8EE;
+    --danger:#C24A3B;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{
+    font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;
+    background:var(--off-white);
+    color:var(--ink);
+    display:flex;
+    height:100vh;
+    overflow:hidden;
+  }
+
+  /* ---------------- SIDEBAR ---------------- */
+  #sidebar{
+    width:300px;
+    min-width:300px;
+    background:linear-gradient(180deg,var(--navy) 0%, var(--navy-2) 100%);
+    color:#EAF0F6;
+    display:flex;
+    flex-direction:column;
+    height:100%;
+  }
+  #brand{
+    padding:20px 18px 16px 18px;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+  #brand .mark{
+    display:flex;align-items:center;gap:10px;
+  }
+  #brand .mark .crest{
+    width:48px;height:48px;border-radius:10px;
+    background:linear-gradient(135deg,var(--gold),#B8862E);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;color:var(--navy);font-size:13px;letter-spacing:.2px;
+    flex:none;
+  }
+  #brand h1{
+    font-size:15.5px;margin:0;font-weight:700;letter-spacing:.2px;
+  }
+  #brand p{
+    margin:2px 0 0 0;font-size:11px;color:#9FB3C8;letter-spacing:.4px;text-transform:uppercase;
+  }
+  #sidebar-search{
+    padding:12px 14px;border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+  #sidebar-search input{
+    width:100%;
+    padding:9px 10px;
+    border-radius:8px;
+    border:1px solid rgba(255,255,255,0.12);
+    background:rgba(255,255,255,0.06);
+    color:#EAF0F6;
+    font-size:12.5px;
+    outline:none;
+  }
+  #sidebar-search input::placeholder{color:#8FA3B8;}
+  #sidebar-search input:focus{border-color:var(--teal-light);background:rgba(255,255,255,0.1);}
+
+  #menu{
+    flex:1;
+    overflow-y:auto;
+    padding:8px 8px 14px 8px;
+  }
+  #menu::-webkit-scrollbar{width:7px;}
+  #menu::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:6px;}
+
+  .pillar{margin-bottom:2px;}
+  .pillar-btn{
+    width:100%;
+    display:flex;align-items:center;gap:10px;
+    background:none;border:none;cursor:pointer;
+    color:#DCE6F0;
+    padding:10px 10px;
+    border-radius:8px;
+    font-size:13.2px;
+    text-align:left;
+    font-weight:600;
+    transition:background .15s ease;
+  }
+  .pillar-btn:hover{background:rgba(255,255,255,0.06);}
+  .pillar-btn.active-parent{background:rgba(20,163,163,0.14);color:#fff;}
+  .pillar-num{
+    flex:none;width:22px;height:22px;border-radius:6px;
+    background:rgba(255,255,255,0.08);
+    display:flex;align-items:center;justify-content:center;
+    font-size:10.5px;color:var(--gold);font-weight:700;
+  }
+  .pillar-label{flex:1;}
+  .chev{
+    flex:none;width:14px;height:14px;
+    transition:transform .18s ease;
+    color:#7E93AA;
+  }
+  .pillar.open .chev{transform:rotate(90deg);color:var(--teal-light);}
+
+  .submenu{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .22s ease;
+    margin-left:14px;
+    border-left:1px solid rgba(255,255,255,0.09);
+  }
+  .pillar.open .submenu{max-height:600px;}
+  .sub-btn{
+    display:block;
+    width:calc(100% - 6px);
+    margin:2px 0 2px 6px;
+    text-align:left;
+    background:none;
+    border:none;
+    color:#AFC1D4;
+    font-size:12.3px;
+    padding:7px 10px;
+    border-radius:7px;
+    cursor:pointer;
+    transition:background .12s ease,color .12s ease;
+  }
+  .sub-btn:hover{background:rgba(255,255,255,0.06);color:#fff;}
+  .sub-btn-folder{ color:#8FB8B8; }
+  .sub-btn-folder:hover{ color:var(--teal-light); }
+  .sub-btn.active{
+    background:rgba(212,169,76,0.16);
+    color:var(--gold);
+    font-weight:600;
+  }
+
+  #sidebar-footer{
+    padding:10px 16px 14px 16px;
+    border-top:1px solid rgba(255,255,255,0.08);
+    font-size:10.6px;
+    color:#7E93AA;
+  }
+
+  /* ---------------- MAIN ---------------- */
+  #main{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    height:100%;
+    min-width:0;
+  }
+  #topbar{
+    height:56px;
+    flex:none;
+    background:var(--paper);
+    border-bottom:1px solid var(--line);
+    display:flex;align-items:center;
+    padding:0 22px;
+    gap:10px;
+  }
+  #topbar .crumbs{font-size:12.5px;color:var(--ink-soft);}
+  #topbar .crumbs b{color:var(--navy);}
+  #topbar .crumbs .crumb-home{cursor:pointer;}
+  #topbar .crumbs .crumb-home:hover{color:var(--teal);text-decoration:underline;}
+  #topbar .crumbs .crumb-link{cursor:pointer;}
+  #topbar .crumbs .crumb-link:hover{color:var(--teal);text-decoration:underline;}
+  #brand{cursor:pointer;}
+  #brand:hover .crest{filter:brightness(1.08);}
+  #brand:hover h1{color:var(--gold);}
+  #topbar .tag{
+    margin-left:auto;
+    font-size:10.5px;
+    background:rgba(14,124,134,0.1);
+    color:var(--teal);
+    padding:4px 10px;
+    border-radius:20px;
+    font-weight:700;
+    letter-spacing:.3px;
+  }
+
+  #content-area{
+    flex:1;
+    overflow-y:auto;
+    padding:26px 30px 20px 30px;
+  }
+  #content-area::-webkit-scrollbar{width:8px;}
+  #content-area::-webkit-scrollbar-thumb{background:#D3DAE3;border-radius:6px;}
+
+  .doc-card{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:12px;
+    max-width:880px;
+    padding:26px 30px 30px 30px;
+    box-shadow:0 1px 3px rgba(20,40,70,0.04);
+  }
+  .doc-eyebrow{
+    font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;
+    color:var(--teal);margin-bottom:6px;
+  }
+  .doc-card h2{
+    margin:0 0 14px 0;color:var(--navy);font-size:22px;
+    border-bottom:2px solid var(--gold);padding-bottom:12px;
+  }
+  .doc-card h3{color:var(--navy-2);font-size:14.5px;margin:18px 0 8px 0;}
+  .doc-card p{font-size:13.5px;line-height:1.65;color:#333c47;margin:0 0 10px 0;}
+  .doc-card ul{margin:0 0 12px 0;padding-left:20px;}
+  .doc-card li{font-size:13.3px;line-height:1.7;color:#333c47;margin-bottom:3px;}
+  .doc-card table{width:100%;border-collapse:collapse;margin:8px 0 16px 0;font-size:12.8px;}
+  .doc-card th{
+    background:var(--navy);color:#fff;text-align:left;padding:8px 10px;font-size:11.5px;
+    text-transform:uppercase;letter-spacing:.3px;
+  }
+  .doc-card td{padding:8px 10px;border-bottom:1px solid var(--line);color:#333c47;}
+  .doc-card tr:nth-child(even) td{background:#FAFBFC;}
+  .pill-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;}
+  .pill{
+    font-size:11px;background:#EFF3F7;color:var(--navy-2);padding:4px 10px;border-radius:14px;
+    border:1px solid var(--line);font-weight:600;
+  }
+
+  .pillar-item-list{display:flex;flex-direction:column;gap:8px;margin-top:16px;}
+  .pillar-item-row{
+    display:flex;align-items:center;justify-content:space-between;
+    width:100%;text-align:left;background:#FAFBFC;border:1px solid var(--line);
+    border-radius:9px;padding:11px 14px;cursor:pointer;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .pillar-item-row:hover{border-color:var(--teal-light);background:#F1F8F8;}
+  .pillar-item-row .pi-title{font-size:13.3px;font-weight:600;color:var(--navy);}
+  .pillar-item-row .pi-arrow{font-size:11.5px;font-weight:700;color:var(--teal);}
+
+  /* ---------------- ADMIN: EDIT / ADD CONTENT ---------------- */
+  .card-toolbar{display:flex;justify-content:flex-end;gap:8px;margin:-4px 0 12px 0;}
+  .tbtn{
+    font-size:11.3px;font-weight:700;padding:6px 13px;border-radius:7px;cursor:pointer;
+    border:1px solid var(--line);background:#fff;color:var(--navy-2);
+    transition:border-color .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .tbtn:hover{box-shadow:0 2px 6px rgba(20,40,70,0.08);}
+  .tbtn.edit{color:var(--teal);border-color:rgba(14,124,134,0.35);}
+  .tbtn.edit:hover{background:rgba(14,124,134,0.06);}
+  .tbtn.delete{color:var(--danger);border-color:rgba(194,74,59,0.35);}
+  .tbtn.delete:hover{background:rgba(194,74,59,0.06);}
+  .tbtn.add{background:var(--teal);color:#fff;border-color:var(--teal);}
+  .tbtn.add:hover{background:#0b6870;}
+  .tbtn.download{color:var(--navy-2);border-color:var(--line);}
+  .tbtn.download:hover{background:#EFF3F7;border-color:#C7D2DC;}
+
+  .edit-form{display:flex;flex-direction:column;gap:16px;max-width:820px;}
+  .edit-form .f-group label{
+    display:block;font-size:10.8px;font-weight:700;text-transform:uppercase;
+    letter-spacing:.4px;color:var(--navy-2);margin-bottom:6px;
+  }
+  .edit-form input[type=text]{
+    width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;
+    font-size:14px;box-sizing:border-box;color:var(--ink);font-family:inherit;
+  }
+  .edit-form input[type=text]:focus{outline:none;border-color:var(--teal-light);}
+  .edit-form textarea{
+    width:100%;min-height:300px;padding:12px;border:1px solid var(--line);border-radius:8px;
+    font-size:12.6px;font-family:'Consolas','Courier New',monospace;line-height:1.6;
+    box-sizing:border-box;resize:vertical;color:var(--ink);
+  }
+  .edit-form textarea:focus{outline:none;border-color:var(--teal-light);}
+  .edit-form .hint{font-size:11px;color:var(--ink-soft);margin-top:5px;}
+  .edit-form .form-actions{display:flex;gap:10px;margin-top:2px;}
+  .edit-form .form-actions button{
+    padding:10px 20px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;border:1px solid var(--line);
+  }
+  .edit-form .form-actions .save{background:var(--teal);color:#fff;border-color:var(--teal);}
+  .edit-form .form-actions .save:hover{background:#0b6870;}
+  .edit-form .form-actions .cancel{background:#fff;color:var(--ink-soft);}
+  .edit-form .form-actions .cancel:hover{border-color:#C6CFDA;}
+
+  .wysiwyg-header{display:flex;flex-direction:column;gap:2px;margin-bottom:8px;}
+  .wysiwyg-subtitle{font-size:11px;color:var(--ink-soft);font-weight:400;text-transform:none;letter-spacing:0;}
+  .wysiwyg-toolbar{
+    display:flex;flex-wrap:wrap;gap:6px;padding:8px;background:#F1F5F8;
+    border:1px solid var(--line);border-bottom:none;border-radius:8px 8px 0 0;
+  }
+  .wysiwyg-toolbar button{
+    font-size:12px;font-weight:700;padding:6px 10px;border-radius:6px;
+    border:1px solid var(--line);background:#fff;color:var(--navy-2);cursor:pointer;
+  }
+  .wysiwyg-toolbar button:hover{border-color:var(--teal-light);background:#EAF6F6;}
+  .wysiwyg-sep{width:1px;background:var(--line);margin:2px 4px;}
+  .wysiwyg-editor{
+    min-height:160px;max-height:340px;overflow-y:auto;
+    border:1px solid var(--line);border-radius:0 0 8px 8px;
+    padding:14px;font-size:13.5px;line-height:1.65;color:var(--ink);
+    background:#fff;box-sizing:border-box;
+  }
+  .wysiwyg-editor:focus{outline:none;border-color:var(--teal-light);}
+  .wysiwyg-editor:empty:before{content:attr(data-placeholder);color:#9aa7b4;font-style:italic;}
+  .wysiwyg-editor ul, .wysiwyg-editor ol{padding-left:22px;margin:8px 0;}
+  .wysiwyg-editor h3{color:var(--navy);margin:10px 0 6px 0;font-size:16px;}
+  .wysiwyg-editor p{margin:0 0 8px 0;}
+  .wysiwyg-editor a{color:var(--teal);}
+  .wysiwyg-convert-btn{
+    margin-top:10px;padding:9px 16px;border-radius:8px;border:1px solid var(--teal);
+    background:var(--teal);color:#fff;font-weight:700;font-size:12.6px;cursor:pointer;
+  }
+  .wysiwyg-convert-btn:hover{background:#0b6870;}
+
+  .doc-card pre.kb-diagram{
+    font-family:'Consolas','Courier New',monospace;
+    /* MODIFIED: was white-space:pre (never wraps, forces horizontal
+       scrolling on long lines) — now wraps long lines while still
+       respecting real line breaks, so content stays readable without
+       needing to scroll sideways. */
+    white-space:pre-wrap;word-break:break-word;overflow-x:auto;
+    font-size:11.6px;line-height:1.55;color:#333c47;
+    background:#F1F5F8;border:1px solid var(--line);border-radius:8px;
+    padding:14px 16px;margin:10px 0 16px 0;
+  }
+
+  /* Uploaded PowerPoint content — rendered as slide-styled cards (16:9-ish
+     proportions, title bar, slide number badge) instead of a flat Word/PDF
+     style bullet dump, so it visually reads as slides. */
+  .doc-card .pptx-slide{
+    position:relative;
+    width:100%;
+    min-height:230px;
+    box-sizing:border-box;
+    background:linear-gradient(180deg,#FFFFFF 0%, #FBFCFD 100%);
+    border:1px solid var(--line);
+    border-radius:12px;
+    box-shadow:0 4px 14px rgba(20,40,70,0.09);
+    padding:34px 40px 28px 40px;
+    margin:0 0 26px 0;
+  }
+  .doc-card .pptx-slide::before{
+    content:"";
+    position:absolute; top:0; left:0; right:0; height:6px;
+    background:linear-gradient(90deg, var(--teal), var(--gold));
+    border-radius:12px 12px 0 0;
+  }
+  .doc-card .pptx-slide-index{
+    position:absolute; top:16px; right:16px;
+    font-size:10.5px; font-weight:700; color:var(--ink-soft);
+    background:#F1F5F8; border:1px solid var(--line);
+    padding:3px 11px; border-radius:12px; letter-spacing:.2px;
+  }
+  .doc-card .pptx-slide-title{
+    font-size:19px; font-weight:800; color:var(--navy);
+    border-bottom:3px solid var(--gold);
+    padding-bottom:12px; margin:0 0 16px 0;
+    padding-right:110px;
+  }
+  .doc-card ul.pptx-slide-body{
+    font-size:13.6px; line-height:1.75; color:var(--ink);
+    margin:0; padding-left:22px;
+  }
+  .doc-card ul.pptx-slide-body li{ margin-bottom:6px; }
+  .doc-card p.pptx-slide-empty{ color:var(--ink-soft); font-size:13px; margin:0; }
+
+  .doc-card .pptx-chart{ margin-top:14px; }
+  .doc-card .pptx-chart-label{
+    font-size:11.5px; font-weight:700; color:var(--teal);
+    margin-bottom:8px; letter-spacing:.2px;
+  }
+  .doc-card table.pptx-chart-table{
+    width:100%; border-collapse:collapse; font-size:12.6px;
+  }
+  .doc-card table.pptx-chart-table th{
+    background:var(--navy); color:#fff; text-align:left;
+    padding:8px 12px; font-size:11.5px; font-weight:700;
+  }
+  .doc-card table.pptx-chart-table td{
+    padding:7px 12px; border-bottom:1px solid var(--line); color:var(--ink);
+  }
+  .doc-card table.pptx-chart-table tr:nth-child(even) td{ background:#FAFBFC; }
+
+  .doc-card .pptx-slide-image{ margin-top:14px; text-align:center; }
+  .doc-card .pptx-slide-image img{
+    max-width:100%; max-height:340px; border-radius:8px;
+    border:1px solid var(--line); box-shadow:0 3px 10px rgba(20,40,70,0.08);
+  }
+
+  /* MODIFIED: this used to be hidden by default and toggled open via a
+     "View Original Slides" button. Per request, uploaded PowerPoint files
+     now show ONLY this real, pixel-perfect viewer (Office Online embed) —
+     the extracted text/slide-box/chart reconstruction is no longer shown
+     on the page at all (it's still generated behind the scenes purely so
+     the chatbot can search PowerPoint content by text). Always visible,
+     no toggle, no hide option. */
+  .pptx-viewer-wrap{
+    display:block; margin:0 0 4px 0; border:1px solid var(--line);
+    border-radius:10px; overflow:hidden;
+    box-shadow:0 4px 14px rgba(20,40,70,0.09);
+  }
+  .pptx-viewer-wrap iframe{ width:100%; aspect-ratio:16/9; border:0; display:block; background:#F1F5F8; }
+  .pptx-viewer-fallback{
+    font-size:11.2px; color:var(--ink-soft); padding:8px 14px;
+    background:#F7F9FB; border-top:1px solid var(--line);
+  }
+  .pptx-viewer-fallback a{ color:var(--teal); font-weight:600; }
+
+  /* ---------------- FOLDER-BASED DOCUMENT MANAGEMENT ---------------- */
+  .folder-section{ margin-top:26px; padding-top:22px; border-top:1px solid var(--line); }
+  .folder-section-header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+  .folder-section-header h3{ margin:0; font-size:16px; color:var(--navy); }
+
+  .folder-toolbar{ display:flex; gap:8px; margin:14px 0; flex-wrap:wrap; }
+  .folder-upload-status{ font-size:12px; color:var(--ink-soft); min-height:16px; margin-bottom:10px; }
+  .folder-empty-hint{ color:var(--ink-soft); font-size:13.5px; padding:18px 0; }
+
+  .folder-grid, .file-grid{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(170px, 1fr));
+    gap:14px; margin:10px 0 22px 0;
+  }
+  .folder-card, .file-card{
+    position:relative; background:#FAFBFC; border:1px solid var(--line); border-radius:10px;
+    padding:16px 14px 12px 14px; cursor:pointer; transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  .folder-card:hover, .file-card:hover{ border-color:var(--teal-light); box-shadow:0 4px 12px rgba(20,40,70,0.08); }
+  .folder-card-icon, .file-card-icon{ font-size:30px; margin-bottom:8px; }
+  .folder-card-name, .file-card-name{
+    font-size:13px; font-weight:700; color:var(--navy); line-height:1.3;
+    overflow-wrap:break-word; margin-bottom:4px;
+  }
+  .folder-card-meta, .file-card-meta{ font-size:10.8px; color:var(--ink-soft); }
+  .folder-card-actions, .file-card-actions{
+    display:flex; gap:6px; margin-top:10px; opacity:0; transition:opacity .15s ease;
+  }
+  .folder-card:hover .folder-card-actions, .file-card:hover .file-card-actions{ opacity:1; }
+  .fc-action{
+    font-size:12px; padding:4px 7px; border-radius:6px; border:1px solid var(--line);
+    background:#fff; color:var(--navy-2); cursor:pointer; line-height:1;
+  }
+  .fc-action:hover{ border-color:var(--teal-light); background:#EAF6F6; }
+  .fc-action.delete:hover{ border-color:#E0958A; background:#FBEEEC; color:var(--danger); }
+
+  .doc-search-result{
+    margin-top:10px; padding:10px 12px; background:#F7F9FB; border:1px solid var(--line);
+    border-radius:8px; font-size:12.5px;
+  }
+  .msg.bot .doc-search-result .dsr-name{ font-weight:700; color:var(--navy); margin-bottom:2px; }
+  .msg.bot .doc-search-result .dsr-path{ color:var(--teal); font-size:11px; margin-bottom:4px; }
+  .msg.bot .doc-search-result .dsr-snippet{ color:#555f6b; font-style:italic; margin-bottom:6px; }
+  .msg.bot .doc-search-result .open-link{ margin-top:0; }
+
+  #welcome{max-width:880px;}
+  #welcome h2{color:var(--navy);font-size:24px;margin-bottom:6px;}
+  #welcome p.sub{color:var(--ink-soft);font-size:13.5px;margin-bottom:22px;}
+  .cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:12px;}
+  .cat-card{
+    background:var(--paper);border:1px solid var(--line);border-radius:10px;
+    padding:14px 16px;cursor:pointer;transition:box-shadow .15s ease, border-color .15s ease;
+  }
+  .cat-card:hover{box-shadow:0 3px 10px rgba(20,40,70,0.08);border-color:var(--teal-light);}
+  .cat-card .n{color:var(--gold);font-weight:700;font-size:11px;letter-spacing:.4px;}
+  .cat-card .t{color:var(--navy);font-weight:700;font-size:14px;margin:3px 0 4px 0;}
+  .cat-card .c{color:var(--ink-soft);font-size:11.8px;}
+
+  /* ---------------- CHAT DOCK ---------------- */
+  #chat-toggle{
+    position:fixed;right:26px;bottom:26px;
+    width:56px;height:56px;border-radius:50%;
+    background:linear-gradient(135deg,var(--teal),var(--navy));
+    color:#fff;border:none;cursor:pointer;
+    box-shadow:0 6px 18px rgba(11,31,58,0.3);
+    display:flex;align-items:center;justify-content:center;
+    z-index:40;
+  }
+  #chat-toggle svg{width:24px;height:24px;}
+
+  #chat-panel{
+    position:fixed;right:26px;bottom:94px;
+    width:380px;height:520px;
+    background:var(--paper);
+    border-radius:14px;
+    border:1px solid var(--line);
+    box-shadow:0 12px 40px rgba(11,31,58,0.22);
+    display:flex;flex-direction:column;
+    overflow:hidden;
+    z-index:41;
+    transform:translateY(12px);
+    opacity:0;pointer-events:none;
+    transition:transform .18s ease, opacity .18s ease;
+  }
+  #chat-panel.open{transform:translateY(0);opacity:1;pointer-events:all;}
+
+  #chat-head{
+    background:var(--navy);color:#fff;padding:13px 16px;
+    display:flex;align-items:center;gap:10px;
+  }
+  #chat-head .dot{width:8px;height:8px;border-radius:50%;background:#34D399;}
+  #chat-head .t{font-size:13.5px;font-weight:700;}
+  #chat-head .s{font-size:10.5px;color:#9FB3C8;margin-left:auto;cursor:pointer;}
+
+  #chat-log{
+    flex:1;overflow-y:auto;padding:14px;background:#F5F7F9;
+    display:flex;flex-direction:column;gap:10px;
+  }
+  #chat-log::-webkit-scrollbar{width:6px;}
+  #chat-log::-webkit-scrollbar-thumb{background:#D3DAE3;border-radius:6px;}
+
+  .msg{max-width:88%;font-size:12.8px;line-height:1.55;padding:9px 12px;border-radius:12px;}
+  .msg.bot{
+    background:#fff;border:1px solid var(--line);align-self:flex-start;color:#333c47;
+    border-bottom-left-radius:3px;
+  }
+  .msg.user{
+    background:var(--teal);color:#fff;align-self:flex-end;border-bottom-right-radius:3px;
+  }
+  .msg.bot .result-title{font-weight:700;color:var(--navy);font-size:12.6px;margin-bottom:4px;display:flex;align-items:center;gap:6px;}
+  .msg.bot .result-title .badge{
+    font-size:9px;background:rgba(14,124,134,0.12);color:var(--teal);padding:2px 6px;border-radius:8px;font-weight:700;
+  }
+  .msg.bot a.open-link{
+    display:inline-block;margin-top:6px;font-size:11.5px;color:var(--teal);font-weight:700;cursor:pointer;
+  }
+  .msg.bot .snippet{color:#555f6b;}
+  .msg.bot .choices{margin-top:8px;display:flex;flex-direction:column;gap:5px;}
+  .msg.bot .choice-btn{
+    text-align:left;background:#EFF6F6;border:1px solid #D6E8E8;color:var(--navy-2);
+    font-size:11.6px;padding:6px 9px;border-radius:7px;cursor:pointer;font-weight:600;
+  }
+  .msg.bot .choice-btn:hover{background:#E1F0F0;}
+
+  #chat-input-row{
+    display:flex;gap:8px;padding:10px;border-top:1px solid var(--line);background:#fff;
+  }
+  #chat-input-row input{
+    flex:1;border:1px solid var(--line);border-radius:20px;padding:9px 14px;font-size:12.6px;outline:none;
+  }
+  #chat-input-row input:focus{border-color:var(--teal-light);}
+  #chat-input-row button{
+    background:var(--teal);border:none;color:#fff;width:36px;height:36px;border-radius:50%;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;flex:none;
+  }
+  #chat-input-row button svg{width:16px;height:16px;}
+
+  .hidden{display:none !important;}
+  /* ---------------- ROLE / LOGIN GATE ---------------- */
+  #role-gate{
+    position:fixed;inset:0;background:rgba(11,31,58,0.72);
+    display:flex;align-items:center;justify-content:center;z-index:100;
+  }
+  #role-gate.hidden{display:none;}
+  .gate-card{
+    background:var(--paper);border-radius:14px;padding:32px 34px;width:360px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.35);text-align:center;
+  }
+  .gate-card .crest{
+    width:46px;height:46px;border-radius:10px;margin:0 auto 12px auto;
+    background:linear-gradient(135deg,var(--gold),#B8862E);
+    display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--navy);font-size:18px;
+  }
+  .gate-card h2{margin:0 0 4px 0;color:var(--navy);font-size:18px;}
+  .gate-card p{margin:0 0 20px 0;color:var(--ink-soft);font-size:12.5px;}
+  .gate-btn{
+    width:100%;padding:11px 14px;border-radius:9px;border:1px solid var(--line);
+    background:#fff;cursor:pointer;font-size:13px;font-weight:700;margin-bottom:10px;
+    display:flex;align-items:center;gap:10px;text-align:left;color:var(--navy);
+    transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  .gate-btn:hover{border-color:var(--teal-light);box-shadow:0 3px 10px rgba(20,40,70,0.08);}
+  .gate-btn .ic{
+    width:30px;height:30px;border-radius:8px;flex:none;
+    display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;
+  }
+  .gate-btn.admin .ic{background:var(--teal);}
+  .gate-btn.guest .ic{background:#7E93AA;}
+  .gate-btn .sub{display:block;font-weight:400;font-size:10.8px;color:var(--ink-soft);margin-top:1px;}
+
+  #role-badge{
+    display:flex;align-items:center;justify-content:space-between;gap:6px;
+    padding:8px 16px;border-top:1px solid rgba(255,255,255,0.08);
+    font-size:11px;color:#AFC1D4;
+  }
+  #role-badge .lbl{display:flex;align-items:center;gap:6px;}
+  #role-badge .role-pill{
+    font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:.3px;
+  }
+  #role-badge .role-pill.admin{background:rgba(20,163,163,0.22);color:var(--teal-light);}
+  #role-badge .role-pill.guest{background:rgba(255,255,255,0.1);color:#AFC1D4;}
+  #role-badge button{
+    background:none;border:none;color:#7E93AA;font-size:10.5px;cursor:pointer;text-decoration:underline;
+  }
+  #role-badge button:hover{color:#fff;}
+
+  /* MODIFIED: the old sidebar "Upload Knowledge Base" panel and its CSS
+     (#kb-upload, #kb-status, #kb-file-list, #kb-download-all) have been
+     removed — uploads now happen only inside folders. See the
+     FOLDER-BASED DOCUMENT MANAGEMENT styles further down. */
+
+  /* MODIFIED: removed unused .kb-sync* / #kbImportInput rules that styled
+     the now-removed "Move to another browser / device" Export/Import block. */
+
+  /* ---------------- UI-PATH BREADCRUMB (inside doc cards) ---------------- */
+  .ui-path{
+    display:flex;align-items:center;flex-wrap:wrap;gap:5px;
+    font-size:11.2px;color:var(--ink-soft);
+    background:#F1F5F8;border:1px solid var(--line);border-radius:8px;
+    padding:7px 11px;margin:0 0 16px 0;
+  }
+  .ui-path .seg{color:var(--navy-2);font-weight:600;}
+  .ui-path .seg.leaf{color:var(--teal);}
+  .ui-path .sep{color:#AAB6C2;}
+  .ui-path .pin{flex:none;}
+
+  @media (max-width:820px){
+    #sidebar{position:fixed;left:0;top:0;bottom:0;z-index:60;transform:translateX(-100%);transition:transform .2s ease;}
+    #sidebar.mobile-open{transform:translateX(0);}
+    #chat-panel{width:92vw;right:4vw;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= ROLE / LOGIN GATE ================= -->
+<div id="role-gate">
+  <div class="gate-card">
+    <div class="crest">OG&amp;E</div>
+    <h2>OGE University</h2>
+    <p>Sign in to continue to the QA Knowledge Centre</p>
+
+    <div id="gate-roles">
+      <button class="gate-btn admin" id="loginAdmin">
+        <span class="ic">A</span>
+        <span>Contributor Login<span class="sub">Full access + upload knowledge base</span></span>
+      </button>
+      <button class="gate-btn guest" id="loginGuest">
+        <span class="ic">G</span>
+        <span>Guest<span class="sub">Browse &amp; search the knowledge centre</span></span>
+      </button>
+    </div>
+
+    <div id="gate-admin-pwd" class="hidden">
+      <p style="margin:0 0 10px 0;text-align:left;">Enter the Contributor password to continue.</p>
+      <input type="password" id="adminPwdInput" placeholder="Contributor password" autocomplete="off"
+        style="width:100%;padding:9px 11px;border-radius:8px;border:1px solid var(--line);font-size:13px;margin-bottom:8px;outline:none;box-sizing:border-box;">
+      <div id="adminPwdError" style="display:none;color:var(--danger);font-size:11.5px;margin-bottom:8px;text-align:left;">Incorrect password. Please try again.</div>
+      <button class="gate-btn admin" id="adminPwdSubmit" style="justify-content:center;">
+        <span>Sign in as Contributor</span>
+      </button>
+      <button class="gate-btn guest" id="adminPwdBack" style="justify-content:center;">
+        <span>Back</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= SIDEBAR ================= -->
+<div id="sidebar">
+  <div id="brand">
+    <div class="mark">
+      <div class="crest">OG&amp;E</div>
+      <div>
+        <h1>OGE University</h1>
+        <p>QA Knowledge Centre</p>
+      </div>
+    </div>
+  </div>
+  <div id="sidebar-search">
+    <input id="menuFilter" type="text" placeholder="Filter menu...">
+  </div>
+
+  <nav id="menu"></nav>
+  <div id="sidebar-footer">
+    <div id="footer-stats">10 Pillars · 57 Knowledge Assets · v1.0</div>
+    <div id="role-badge">
+      <span class="lbl">Signed in as <span class="role-pill" id="rolePill">—</span></span>
+      <button id="switchRole">Switch</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MAIN ================= -->
+<div id="main">
+  <div id="topbar">
+    <div class="crumbs" id="crumbs"><b class="crumb-home" data-go-home>OGE University</b> / Home</div>
+    <div class="tag">Single Source of Truth</div>
+  </div>
+  <div id="content-area">
+    <div id="welcome">
+      <h2>Welcome to OGE University</h2>
+      <p class="sub">A single source of truth for QA, Test Automation, RPA, delivery processes, standards, learning assets, and operational knowledge. Browse a pillar on the left, or ask the assistant in the bottom-right corner — e.g. "give me the test plan template".</p>
+      <div class="cat-grid" id="catGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= CHAT DOCK ================= -->
+<button id="chat-toggle" aria-label="Open assistant">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+</button>
+
+<div id="chat-panel">
+  <div id="chat-head">
+    <div class="dot"></div>
+    <div class="t">OGE Assistant</div>
+    <div class="s" id="chatClose">Close ✕</div>
+  </div>
+  <div id="chat-log"></div>
+  <div id="chat-input-row">
+    <input id="chatInput" type="text" placeholder='Try "test plan template"'>
+    <button id="chatSend" aria-label="Send">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- Parsing libraries for Contributor knowledge-base uploads (Word / PDF / Excel) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+  // ================= SUPABASE =================
+const SUPABASE_URL = "https://asevapnoldvxcogiqstp.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_FRuN6r6G2rJJbItX_9lk8g_OdKg9fwk";
+
+const sb = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+);
+
+console.log("✅ Connected to Supabase");
+
+// Folder browsing is being rolled out to these pillars first — everything
+// else keeps working exactly as it did (curated articles via the sidebar
+// and the existing pillar overview page). Declared here (early) because
+// rebuildAll()/loadFoldersAndDocs() below reference these immediately.
+// MODIFIED: folder browsing is now available for every pillar (was
+// scoped to just Getting Started / QA Processes while this was being
+// tried out) — everything else keeps working exactly the same way
+// (curated articles still show via the sidebar; the folder browser is an
+// additional, separate view reached from the dashboard tile).
+const FOLDER_ENABLED_PILLARS = ['getting-started', 'qa-processes', 'performance-testing', 'automation', 'rpa', 'reporting-metrics', 'standards-templates', 'knowledge-base', 'learning-training', 'governance'];
+let ALL_FOLDERS = [];
+let ALL_DOCS = [];
+
+loadFoldersAndDocs();
+// ============================================
+/* =========================================================================
+   KNOWLEDGE BASE
+   Structure: PILLARS[] -> { id, title, icon, items: [ { id, title, tags, html } ] }
+   ========================================================================= */
+
+function card(eyebrow, title, bodyHtml){
+  const path = `
+    <div class="ui-path">
+      <span class="pin">📍</span>
+      <span class="seg">Sidebar</span><span class="sep">›</span>
+      <span class="seg">${eyebrow}</span><span class="sep">›</span>
+      <span class="seg leaf">${title}</span>
+    </div>`;
+  return `<div class="doc-eyebrow">${eyebrow}</div><h2>${title}</h2>${path}${bodyHtml}`;
+}
+function tagsRow(arr){
+  return `<div class="pill-row">${arr.map(t=>`<span class="pill">${t}</span>`).join('')}</div>`;
+}
+
+const PILLARS = [
+{
+  id:"getting-started", title:"Getting Started", icon:"1",
+  items:[
+    { id:"qa-handbook", title:"QA Handbook", tags:"qa handbook overview manual",
+      html: card("Getting Started","QA Handbook", `
+      <p>The QA Handbook is the master reference for how quality engineering is practised across the CoE. It ties together process, tooling, and expectations into one narrative for new and existing team members.</p>
+      <h3>What it covers</h3>
+      <ul>
+        <li>Mission and scope of the QA Centre of Excellence across Media, Entertainment and Gaming accounts</li>
+        <li>Team structure: functional QA, automation, performance, and RPA streams</li>
+        <li>End-to-end delivery lifecycle from requirement intake to release sign-off</li>
+        <li>Tooling stack: test management, automation frameworks, defect tracking, reporting</li>
+        <li>Escalation matrix and points of contact per account</li>
+      </ul>
+      <h3>How to use it</h3>
+      <p>Treat it as the entry point — every other pillar in OGE University (Processes, Automation, Templates, Governance) is referenced from here. New joiners should read this end-to-end before their first sprint.</p>
+      ${tagsRow(["Mandatory Read","Owner: CoE Lead","Reviewed Quarterly"])}
+      `) },
+    { id:"team-overview", title:"Team Overview", tags:"team overview org structure roles reporting",
+      html: card("Getting Started","Team Overview", `
+      <p>Describes how the QA CoE is organised and how work is assigned across accounts.</p>
+      <h3>Structure</h3>
+      <ul>
+        <li><b>Associate Director</b> — account governance, client escalations, capacity planning</li>
+        <li><b>Associate Test Manager</b> — team leadership (6–15 members), delivery ownership, client reporting</li>
+        <li><b>Test Leads / SMEs</b> — functional, automation, performance and RPA specialists</li>
+        <li><b>QA Engineers</b> — execution, scripting, defect logging</li>
+      </ul>
+      <h3>Accounts covered</h3>
+      <p>Media, Entertainment and Gaming portfolio, including broadcast graphics, OTT platforms, sportsbook/gaming, and enterprise operations accounts.</p>
+      <h3>Communication cadence</h3>
+      <ul>
+        <li>Daily stand-up per account</li>
+        <li>Weekly CoE sync across leads</li>
+        <li>Monthly steering review with client stakeholders</li>
+      </ul>
+      `) },
+    { id:"access-tools", title:"Access & Tools", tags:"access tools accounts licenses vpn logins",
+      html: card("Getting Started","Access & Tools", `
+      <p>Checklist of systems and access requests required to start contributing.</p>
+      <table>
+        <tr><th>Category</th><th>Tool / System</th><th>Requested Via</th></tr>
+        <tr><td>Test Management</td><td>Jira / Zephyr / TestRail</td><td>IT Service Desk</td></tr>
+        <tr><td>Automation</td><td>GitHub / Azure DevOps, Playwright/Selenium repos</td><td>Automation Lead</td></tr>
+        <tr><td>RPA</td><td>UiPath Orchestrator</td><td>RPA Lead</td></tr>
+        <tr><td>Reporting</td><td>Power BI, shared SharePoint sites</td><td>Reporting Owner</td></tr>
+        <tr><td>Comms</td><td>Teams, client VPN / VDI</td><td>Client Onboarding</td></tr>
+      </table>
+      <p>Raise access requests in the first 48 hours of joining; most approvals take 2–3 working days.</p>
+      `) },
+    { id:"environment-setup", title:"Environment Setup", tags:"environment setup local dev configuration",
+      html: card("Getting Started","Environment Setup", `
+      <h3>Local machine setup</h3>
+      <ul>
+        <li>Node.js LTS, Git, VS Code with recommended extensions</li>
+        <li>Automation framework repo cloned and dependencies installed (<code>npm install</code>)</li>
+        <li>Environment variables / config files supplied by the automation lead (never committed to source control)</li>
+      </ul>
+      <h3>Test environments</h3>
+      <ul>
+        <li><b>DEV</b> — unstable, used for smoke checks only</li>
+        <li><b>QA/SIT</b> — primary functional and automation execution environment</li>
+        <li><b>UAT</b> — client/business validation, data close to production</li>
+        <li><b>STAGE</b> — pre-production, used for release validation</li>
+      </ul>
+      <p>Environment refresh schedules and access credentials are maintained by the DevOps/Environments owner — request through the account Test Lead.</p>
+      `) },
+    { id:"new-joiner-checklist", title:"New Joiner Checklist", tags:"new joiner checklist onboarding day one",
+      html: card("Getting Started","New Joiner Checklist", `
+      <h3>Week 1</h3>
+      <ul>
+        <li>Complete IT, HR and security onboarding</li>
+        <li>Read the QA Handbook and Team Overview</li>
+        <li>Get access to Jira/TestRail, repo, and Teams channels</li>
+        <li>Shadow a live sprint ceremony (stand-up, review, retro)</li>
+      </ul>
+      <h3>Week 2</h3>
+      <ul>
+        <li>Complete environment setup and run the automation suite locally</li>
+        <li>Review the Automation Framework Overview and Coding Standards</li>
+        <li>Pair with a buddy on one test case authoring cycle</li>
+      </ul>
+      <h3>Week 3-4</h3>
+      <ul>
+        <li>Take ownership of a small module/feature area under supervision</li>
+        <li>Log first defects following the Defect Management SOP</li>
+        <li>Complete assigned Learning Path modules</li>
+      </ul>
+      `) },
+    { id:"faqs-getting-started", title:"FAQs", tags:"faq questions getting started help",
+      html: card("Getting Started","FAQs", `
+      <p><b>Q: Who do I contact for access issues?</b><br>Raise a ticket with IT Service Desk and cc your Test Lead.</p>
+      <p><b>Q: Where is the automation repo?</b><br>Linked from the Automation → Framework Overview page; ask your lead for repo permissions.</p>
+      <p><b>Q: How do I raise a defect?</b><br>Follow the Defect Management SOP under QA Processes; use the Defect Template under Standards & Templates.</p>
+      <p><b>Q: Who approves knowledge content changes?</b><br>The designated Knowledge Owner for that pillar — see Governance → Document Ownership.</p>
+      `) },
+  ]
+},
+{
+  id:"qa-processes", title:"QA Processes", icon:"2",
+  items:[
+    { id:"test-planning", title:"Test Planning", tags:"test planning strategy scope approach",
+      html: card("QA Processes","Test Planning", `
+      <p>Test Planning defines scope, approach, resources, and schedule for a testing effort before execution begins.</p>
+      <h3>Key inputs</h3>
+      <ul>
+        <li>Requirements / user stories, acceptance criteria</li>
+        <li>Risk assessment and prioritisation</li>
+        <li>Environment and data availability</li>
+        <li>Release timeline and dependencies</li>
+      </ul>
+      <h3>Process steps</h3>
+      <ol>
+        <li>Analyse requirements and identify test scope (in/out of scope)</li>
+        <li>Define test approach: functional, regression, automation split</li>
+        <li>Estimate effort and define entry/exit criteria</li>
+        <li>Draft the Test Plan (see Standards → Test Plan Templates) and circulate for review</li>
+        <li>Get sign-off from Test Lead and client stakeholder where applicable</li>
+      </ol>
+      <p>Use the <b>Test Plan Template</b> under Standards & Templates to author the actual document.</p>
+      `) },
+    { id:"test-design-guidelines-qa", title:"Test Design Guidelines", tags:"test design guidelines case writing",
+      html: card("QA Processes","Test Design Guidelines", `
+      <ul>
+        <li>Derive test cases from acceptance criteria and design specs, not from the application UI alone</li>
+        <li>Cover positive, negative, boundary and edge scenarios</li>
+        <li>Use equivalence partitioning and boundary value analysis for data-heavy fields</li>
+        <li>Keep one logical validation per test case; avoid multi-purpose test cases</li>
+        <li>Tag test cases by priority (P1–P3) and type (Functional, Regression, Smoke)</li>
+        <li>Use the standard Test Case Template for consistent structure</li>
+      </ul>
+      `) },
+    { id:"review-process-qa", title:"Review Process", tags:"review process peer review sign off",
+      html: card("QA Processes","Review Process", `
+      <p>All test artefacts (plans, cases, scripts) go through a two-stage review before execution.</p>
+      <ol>
+        <li><b>Peer review</b> — another QA engineer checks coverage, clarity, and traceability to requirements</li>
+        <li><b>Lead review</b> — Test Lead validates risk coverage, approach, and estimation</li>
+      </ol>
+      <p>Review comments are logged against the artefact; re-review is mandatory after major rework. Use the Review Checklist under Standards & Templates to keep reviews consistent.</p>
+      `) },
+    { id:"execution-sop-qa", title:"Execution SOP", tags:"execution sop test run process",
+      html: card("QA Processes","Execution SOP", `
+      <ol>
+        <li>Confirm environment readiness and test data availability</li>
+        <li>Execute test cases in priority order (P1 → P3)</li>
+        <li>Log results in the test management tool immediately (Pass/Fail/Blocked)</li>
+        <li>Raise defects for failures per the Defect Management SOP, linked to the test case</li>
+        <li>Update daily execution status in the DSR / dashboard</li>
+        <li>Re-execute failed cases after fix deployment (retest) and run related regression</li>
+      </ol>
+      `) },
+    { id:"defect-management", title:"Defect Management", tags:"defect management bug lifecycle triage",
+      html: card("QA Processes","Defect Management", `
+      <h3>Lifecycle</h3>
+      <p>New → Triaged → Assigned → In Progress → Fixed → Retest → Closed / Reopened</p>
+      <h3>Severity vs Priority</h3>
+      <table>
+        <tr><th>Severity</th><th>Meaning</th></tr>
+        <tr><td>Critical</td><td>System down / data loss / blocks testing</td></tr>
+        <tr><td>Major</td><td>Core functionality broken, workaround exists</td></tr>
+        <tr><td>Minor</td><td>Cosmetic or low-impact issue</td></tr>
+      </table>
+      <ul>
+        <li>Triage within 24 hours of logging</li>
+        <li>Use the standard Defect Template (Standards & Templates) with repro steps, evidence, and environment details</li>
+        <li>Track ageing defects and recurring root causes on the weekly defect dashboard</li>
+      </ul>
+      `) },
+    { id:"regression-testing", title:"Regression Testing", tags:"regression testing suite scope",
+      html: card("QA Processes","Regression Testing", `
+      <ul>
+        <li>Maintain a risk-based regression suite mapped to core business flows</li>
+        <li>Run full regression before every release; run a targeted subset for hotfixes</li>
+        <li>Prioritise automated coverage for regression to reduce cycle time</li>
+        <li>Review and prune the regression suite quarterly to remove obsolete cases</li>
+        <li>Track regression pass rate as a release-readiness KPI</li>
+      </ul>
+      `) },
+    { id:"release-validation", title:"Release Validation", tags:"release validation go live checklist",
+      html: card("QA Processes","Release Validation", `
+      <ol>
+        <li>Confirm all P1/P2 defects are closed or formally deferred with sign-off</li>
+        <li>Execute smoke suite on the release candidate build</li>
+        <li>Verify configuration, feature flags, and environment parity with production</li>
+        <li>Complete the Release Validation checklist and obtain Test Lead + client sign-off</li>
+        <li>Archive execution evidence for audit/governance purposes</li>
+      </ol>
+      `) },
+    { id:"uat-support", title:"UAT Support", tags:"uat support user acceptance testing",
+      html: card("QA Processes","UAT Support", `
+      <ul>
+        <li>Prepare UAT entry criteria: stable build, test data, access provisioning</li>
+        <li>Support business users with scenario walkthroughs and triage of raised issues</li>
+        <li>Distinguish UAT defects from enhancement requests; log separately</li>
+        <li>Track UAT sign-off status daily and escalate blockers immediately</li>
+        <li>Capture UAT feedback as input to the Lessons Learned knowledge base</li>
+      </ul>
+      `) },
+  ]
+},
+{
+  id:"performance-testing", title:"Performance Testing", icon:"3",
+  items:[
+    { id:"perf-test-planning", title:"Performance Test Planning", tags:"performance test planning nfr",
+      html: card("Performance Testing","Performance Test Planning", `
+      <ul>
+        <li>Gather non-functional requirements: expected load, peak concurrency, response time SLAs</li>
+        <li>Identify critical business transactions to model (login, checkout, live-odds refresh, streaming start, etc.)</li>
+        <li>Define test types needed: load, stress, soak, spike, scalability</li>
+        <li>Define environment parity requirements vs production sizing</li>
+        <li>Document success criteria (response time, throughput, error rate, resource utilisation thresholds)</li>
+      </ul>
+      `) },
+    { id:"perf-test-design-guidelines", title:"Test Design Guidelines", tags:"performance test design guidelines",
+      html: card("Performance Testing","Test Design Guidelines", `
+      <ul>
+        <li>Design scripts around realistic user journeys, not isolated API calls</li>
+        <li>Parameterise test data to avoid caching artefacts skewing results</li>
+        <li>Include realistic think-time and ramp-up/ramp-down patterns</li>
+        <li>Correlate dynamic values (tokens, session IDs) explicitly in scripts</li>
+        <li>Version-control scripts alongside the automation repo</li>
+      </ul>
+      `) },
+    { id:"workload-modeling", title:"Workload Modeling", tags:"workload modeling load profile",
+      html: card("Performance Testing","Workload Modeling", `
+      <p>Workload models translate expected production usage into a testable load profile.</p>
+      <ul>
+        <li>Analyse production analytics (peak concurrent users, transaction mix, seasonal spikes e.g. major match days for sportsbook clients)</li>
+        <li>Define transaction distribution percentages per journey</li>
+        <li>Model ramp-up curves that mirror real traffic patterns rather than flat ramps</li>
+        <li>Validate the model with the client/product owner before scripting begins</li>
+      </ul>
+      `) },
+    { id:"perf-review-process", title:"Review Process", tags:"performance review process results",
+      html: card("Performance Testing","Review Process", `
+      <ul>
+        <li>Peer review of scripts and workload model before execution</li>
+        <li>Result review session with Test Lead after each run — compare against SLA thresholds</li>
+        <li>Root-cause discussion for any breach before sign-off on the next test cycle</li>
+      </ul>
+      `) },
+    { id:"perf-execution-sop", title:"Execution SOP", tags:"performance execution sop",
+      html: card("Performance Testing","Execution SOP", `
+      <ol>
+        <li>Confirm environment is isolated and sized per plan; baseline system health</li>
+        <li>Run a smoke/pilot test at low load to validate scripts</li>
+        <li>Execute the full test (load/stress/soak/spike) per schedule</li>
+        <li>Monitor system resources in real time during execution</li>
+        <li>Capture results, logs, and monitoring dashboards immediately after the run</li>
+      </ol>
+      `) },
+    { id:"monitoring-analysis", title:"Monitoring & Analysis", tags:"monitoring analysis performance results apm",
+      html: card("Performance Testing","Monitoring & Analysis", `
+      <ul>
+        <li>Use APM tooling (e.g. Grafana, Dynatrace, New Relic) to capture CPU, memory, DB, and network metrics during runs</li>
+        <li>Correlate response-time degradation with resource saturation points</li>
+        <li>Identify bottleneck tier (application, DB, network, third-party integration)</li>
+        <li>Summarise findings in a Performance Test Report with trend graphs against previous cycles</li>
+      </ul>
+      `) },
+  ]
+},
+{
+  id:"automation", title:"Automation", icon:"4",
+  items:[
+    { id:"framework-overview", title:"Framework Overview", tags:"automation framework overview architecture layers",
+      html: card("Automation","Framework Overview", `
+      <p>The CoE standard automation framework follows a layered design for maintainability and reuse across accounts.</p>
+      <ul>
+        <li><b>Test Layer</b> — feature/spec files or test classes describing scenarios</li>
+        <li><b>Page/Component Layer</b> — page objects or component locators, isolated from test logic</li>
+        <li><b>Core/Utility Layer</b> — reusable helpers (waits, data readers, API clients, reporting hooks)</li>
+        <li><b>Config Layer</b> — environment, browser, and execution configuration</li>
+      </ul>
+      <p>Supported stacks: Playwright/TypeScript (primary), Selenium/Java (legacy accounts), REST-assured/Postman for API automation.</p>
+      `) },
+    { id:"architecture", title:"Architecture", tags:"automation architecture design pattern",
+      html: card("Automation","Architecture", `
+      <ul>
+        <li>Page Object Model (POM) for UI automation; keep locators out of test files</li>
+        <li>Data-driven design: external JSON/Excel/CSV for test data, no hardcoded values</li>
+        <li>Hybrid framework combining UI + API validation where relevant for faster, more reliable checks</li>
+        <li>Central reporting/hook layer feeding results into the shared dashboard</li>
+      </ul>
+      `) },
+    { id:"coding-standards", title:"Coding Standards", tags:"coding standards automation style guide",
+      html: card("Automation","Coding Standards", `
+      <ul>
+        <li>Descriptive naming: <code>test_shouldDisplayErrorOnInvalidLogin</code> style, not <code>test1</code></li>
+        <li>No hardcoded waits — use explicit/synchronised waits only</li>
+        <li>One assertion focus per test; keep tests independent and order-agnostic</li>
+        <li>Centralise selectors/locators; avoid duplicated XPath/CSS across files</li>
+        <li>Mandatory code review before merge; linting must pass in CI</li>
+      </ul>
+      `) },
+    { id:"reusable-components", title:"Reusable Components", tags:"reusable components library utilities",
+      html: card("Automation","Reusable Components", `
+      <ul>
+        <li>Shared login/authentication helper across suites</li>
+        <li>Common wait/retry utility for flaky elements</li>
+        <li>Generic API client wrapper with auth token handling</li>
+        <li>Data generation utilities (fake data, fixtures)</li>
+        <li>Shared reporting/screenshot-on-failure utility</li>
+      </ul>
+      <p>All reusable components live in the framework's core/utils package and are documented with usage examples in the repo README.</p>
+      `) },
+    { id:"cicd-integration", title:"CI/CD Integration", tags:"cicd integration pipeline jenkins github actions",
+      html: card("Automation","CI/CD Integration", `
+      <ul>
+        <li>Automated suite triggers on every merge to main and on a nightly schedule</li>
+        <li>Smoke suite gates deployment to QA; full regression gates release to STAGE</li>
+        <li>Pipeline publishes results to the shared dashboard and notifies the team channel on failure</li>
+        <li>Supported pipelines: GitHub Actions, Azure DevOps, Jenkins (account-dependent)</li>
+      </ul>
+      `) },
+    { id:"automation-best-practices", title:"Best Practices", tags:"automation best practices tips guidelines",
+      html: card("Automation","Best Practices", `
+      <ul>
+        <li>Automate stable, high-value, repetitive flows first — not everything is worth automating</li>
+        <li>Keep test data isolated per run to avoid cross-test contamination</li>
+        <li>Fail fast with clear assertion messages; avoid silent catches</li>
+        <li>Review and retire flaky tests promptly rather than muting them indefinitely</li>
+        <li>Keep automation coverage mapped back to the regression suite for traceability</li>
+      </ul>
+      `) },
+    { id:"automation-troubleshooting", title:"Troubleshooting", tags:"automation troubleshooting flaky tests debug",
+      html: card("Automation","Troubleshooting", `
+      <table>
+        <tr><th>Symptom</th><th>Likely Cause</th><th>Fix</th></tr>
+        <tr><td>Intermittent failures</td><td>Timing / flaky waits</td><td>Replace static waits with explicit conditions</td></tr>
+        <tr><td>Locator not found</td><td>UI change or dynamic ID</td><td>Use stable attributes (data-testid) over generated IDs</td></tr>
+        <tr><td>Works locally, fails in CI</td><td>Environment/data mismatch</td><td>Align config and seed data between environments</td></tr>
+        <tr><td>Slow suite</td><td>Sequential execution</td><td>Parallelise by tag/shard</td></tr>
+      </table>
+      `) },
+  ]
+},
+{
+  id:"rpa", title:"RPA (UiPath)", icon:"5",
+  items:[
+    { id:"uipath-overview", title:"UiPath Overview", tags:"uipath overview rpa introduction",
+      html: card("RPA (UiPath)","UiPath Overview", `
+      <p>RPA is used within the CoE for high-volume, rules-based operational tasks — attendance/billing sheet generation, report consolidation, and repetitive data-entry validation support.</p>
+      <ul>
+        <li>Components: Studio (development), Orchestrator (scheduling/monitoring), Robots (execution)</li>
+        <li>Process types: Attended (human-triggered) and Unattended (scheduled/triggered)</li>
+        <li>Governed centrally through Orchestrator queues and assets for credentials</li>
+      </ul>
+      `) },
+    { id:"rpa-dev-standards", title:"Development Standards", tags:"rpa development standards uipath",
+      html: card("RPA (UiPath)","Development Standards", `
+      <ul>
+        <li>Follow REFramework (Robotic Enterprise Framework) for transaction-based processes</li>
+        <li>Use Config files for environment-specific values, never hardcode paths/credentials</li>
+        <li>Modularise workflows into reusable components (invoke workflow files, not monolithic scripts)</li>
+        <li>Consistent naming: <code>Process_Module_Action.xaml</code></li>
+        <li>Log meaningfully at each stage (Info/Warn/Error) for traceability</li>
+      </ul>
+      `) },
+    { id:"rpa-deployment-guide", title:"Deployment Guide", tags:"rpa deployment guide orchestrator publish",
+      html: card("RPA (UiPath)","Deployment Guide", `
+      <ol>
+        <li>Publish package from Studio with incremented version</li>
+        <li>Deploy to Orchestrator test environment; validate with sample transactions</li>
+        <li>Obtain sign-off from process owner</li>
+        <li>Promote to production folder in Orchestrator; schedule or trigger per requirement</li>
+        <li>Monitor first live run closely and document any exceptions encountered</li>
+      </ol>
+      `) },
+    { id:"rpa-testing-guidelines", title:"Testing Guidelines", tags:"rpa testing guidelines uipath test suite",
+      html: card("RPA (UiPath)","Testing Guidelines", `
+      <ul>
+        <li>Unit test individual workflow components using UiPath Test Suite</li>
+        <li>Validate against both happy-path and exception scenarios (missing data, application not responding, unexpected pop-ups)</li>
+        <li>Test with production-like data volumes to catch performance/timeout issues</li>
+        <li>Re-test after any change to the target application UI, since RPA is UI-sensitive</li>
+      </ul>
+      `) },
+    { id:"rpa-exception-handling", title:"Exception Handling", tags:"rpa exception handling error retry",
+      html: card("RPA (UiPath)","Exception Handling", `
+      <ul>
+        <li>Distinguish <b>Business Exceptions</b> (expected, e.g. missing field) from <b>System Exceptions</b> (unexpected, e.g. app crash)</li>
+        <li>Use Try-Catch with specific exception types; avoid blanket catch-all blocks that hide errors</li>
+        <li>Configure retry logic (with limits) for transient system exceptions</li>
+        <li>Route unrecoverable transactions to a queue for manual review with full context logged</li>
+      </ul>
+      `) },
+    { id:"rpa-troubleshooting", title:"Troubleshooting", tags:"rpa troubleshooting uipath issues",
+      html: card("RPA (UiPath)","Troubleshooting", `
+      <table>
+        <tr><th>Issue</th><th>Typical Fix</th></tr>
+        <tr><td>Selector not found</td><td>Use UI Explorer to rebuild dynamic selector; avoid full-text matches</td></tr>
+        <tr><td>Robot stuck / timeout</td><td>Check target app responsiveness; add explicit delays/waits</td></tr>
+        <tr><td>Orchestrator connection failure</td><td>Verify robot license and network/firewall settings</td></tr>
+        <tr><td>Queue item stuck In Progress</td><td>Check for unhandled exception; review robot logs</td></tr>
+      </table>
+      `) },
+  ]
+},
+{
+  id:"reporting-metrics", title:"Reporting & Metrics", icon:"6",
+  items:[
+    { id:"dashboards", title:"Dashboards", tags:"dashboards reporting powerbi",
+      html: card("Reporting & Metrics","Dashboards", `
+      <ul>
+        <li>Execution Dashboard — daily pass/fail trend, blocked count, coverage by module</li>
+        <li>Defect Dashboard — open/closed trend, ageing, severity split</li>
+        <li>Automation Dashboard — suite pass rate, execution time trend, flaky test tracker</li>
+        <li>Resource Utilisation Dashboard — allocation vs actuals across projects</li>
+      </ul>
+      <p>Dashboards are refreshed from the test management tool and Excel/Power Automate feeds; owners are listed under Governance → Document Ownership.</p>
+      `) },
+    { id:"kpi-definitions", title:"KPI Definitions", tags:"kpi definitions metrics glossary",
+      html: card("Reporting & Metrics","KPI Definitions", `
+      <table>
+        <tr><th>KPI</th><th>Definition</th></tr>
+        <tr><td>Defect Density</td><td>Defects found per module / per 100 test cases</td></tr>
+        <tr><td>Test Execution %</td><td>Executed cases ÷ planned cases</td></tr>
+        <tr><td>Automation Coverage</td><td>Automated cases ÷ total regression cases</td></tr>
+        <tr><td>Defect Leakage</td><td>Defects found in UAT/Production ÷ total defects</td></tr>
+        <tr><td>First Time Pass Rate</td><td>Cases passed on first execution ÷ total executed</td></tr>
+      </table>
+      `) },
+    { id:"operational-reports", title:"Operational Reports", tags:"operational reports dsr status",
+      html: card("Reporting & Metrics","Operational Reports", `
+      <ul>
+        <li>Daily Status Report (DSR) — RAG status, blockers, plan for next day</li>
+        <li>Weekly Status Report — cumulative progress vs plan, risk log</li>
+        <li>Attendance / Billing report — resource hours by project, generated via the attendance automation workbook</li>
+      </ul>
+      <p>Keep these scannable — RAG indicators and KPI tiles over long narrative text.</p>
+      `) },
+    { id:"release-reporting", title:"Release Reporting", tags:"release reporting go live report",
+      html: card("Reporting & Metrics","Release Reporting", `
+      <ul>
+        <li>Release Readiness Report — test summary, open defects, risk acceptance, sign-off status</li>
+        <li>Post-release Report — production defect count in first 48/72 hours, hotfix count</li>
+        <li>Circulated to client stakeholders as part of the Release Validation exit criteria</li>
+      </ul>
+      `) },
+    { id:"quality-metrics", title:"Quality Metrics", tags:"quality metrics trend analysis",
+      html: card("Reporting & Metrics","Quality Metrics", `
+      <ul>
+        <li>Track defect trend by root cause category over time (requirements, design, code, environment, data)</li>
+        <li>Review quarterly to identify systemic quality issues, not just per-release snapshots</li>
+        <li>Feed insights back into Lessons Learned and process improvement actions</li>
+      </ul>
+      `) },
+  ]
+},
+{
+  id:"standards-templates", title:"Standards & Templates", icon:"7",
+  items:[
+    { id:"test-plan-templates", title:"Test Plan Templates", tags:"test plan template document structure format",
+      html: card("Standards & Templates","Test Plan Template", `
+      <p>Standard structure to use whenever a Test Plan is authored for a project or release.</p>
+      <table>
+        <tr><th>Section</th><th>Content</th></tr>
+        <tr><td>1. Introduction</td><td>Project background, objective of the test plan</td></tr>
+        <tr><td>2. Scope</td><td>In-scope and out-of-scope features/modules</td></tr>
+        <tr><td>3. Test Approach / Strategy</td><td>Test types (functional, regression, automation, performance), levels</td></tr>
+        <tr><td>4. Entry & Exit Criteria</td><td>Conditions to start and to close testing</td></tr>
+        <tr><td>5. Test Environment</td><td>Environments, data, access needed</td></tr>
+        <tr><td>6. Roles & Responsibilities</td><td>Who does what: authoring, execution, review, sign-off</td></tr>
+        <tr><td>7. Schedule & Milestones</td><td>Key dates: design complete, execution start/end, UAT, go-live</td></tr>
+        <tr><td>8. Risks & Mitigations</td><td>Known risks (data, environment, timeline) and mitigation plan</td></tr>
+        <tr><td>9. Deliverables</td><td>Test cases, scripts, reports, sign-off document</td></tr>
+        <tr><td>10. Approvals</td><td>Sign-off names/roles for Test Lead, PM, Client stakeholder</td></tr>
+      </table>
+      <p>Use this structure for every new project or major release. Keep sections 3–8 concise and specific — avoid boilerplate text copied across projects without tailoring.</p>
+      ${tagsRow(["Standard Template","Owner: Test Manager"])}
+      `) },
+    { id:"test-case-templates", title:"Test Case Templates", tags:"test case template format columns",
+      html: card("Standards & Templates","Test Case Template", `
+      <table>
+        <tr><th>Field</th><th>Description</th></tr>
+        <tr><td>Test Case ID</td><td>Unique identifier (e.g. TC_MODULE_001)</td></tr>
+        <tr><td>Title</td><td>Short, action-based description</td></tr>
+        <tr><td>Preconditions</td><td>State required before execution</td></tr>
+        <tr><td>Test Steps</td><td>Numbered, unambiguous steps</td></tr>
+        <tr><td>Test Data</td><td>Input values used</td></tr>
+        <tr><td>Expected Result</td><td>Precise, verifiable outcome</td></tr>
+        <tr><td>Priority</td><td>P1 / P2 / P3</td></tr>
+        <tr><td>Type</td><td>Functional / Regression / Smoke / Negative</td></tr>
+        <tr><td>Status</td><td>Not Run / Pass / Fail / Blocked</td></tr>
+      </table>
+      `) },
+    { id:"defect-templates", title:"Defect Templates", tags:"defect template bug report format",
+      html: card("Standards & Templates","Defect Template", `
+      <table>
+        <tr><th>Field</th><th>Description</th></tr>
+        <tr><td>Defect ID</td><td>Auto-generated by tracking tool</td></tr>
+        <tr><td>Title</td><td>Concise summary of the issue</td></tr>
+        <tr><td>Severity / Priority</td><td>Critical/Major/Minor, and business priority</td></tr>
+        <tr><td>Environment</td><td>Where it was found (QA/UAT/STAGE, browser/device)</td></tr>
+        <tr><td>Steps to Reproduce</td><td>Numbered, exact steps</td></tr>
+        <tr><td>Expected vs Actual Result</td><td>Clear contrast of the two</td></tr>
+        <tr><td>Evidence</td><td>Screenshot, video, logs</td></tr>
+        <tr><td>Linked Test Case</td><td>Reference to the failing test case ID</td></tr>
+      </table>
+      `) },
+    { id:"review-checklists", title:"Review Checklists", tags:"review checklist qa gate",
+      html: card("Standards & Templates","Review Checklists", `
+      <h3>Test Plan Review</h3>
+      <ul><li>Scope matches requirements</li><li>Risks identified and mitigations reasonable</li><li>Entry/exit criteria measurable</li></ul>
+      <h3>Test Case Review</h3>
+      <ul><li>Traceable to a requirement/AC</li><li>Steps unambiguous, one validation focus</li><li>Data and expected result specific, not vague</li></ul>
+      <h3>Automation Script Review</h3>
+      <ul><li>No hardcoded waits/data</li><li>Locators centralised</li><li>Assertions meaningful, failure messages clear</li></ul>
+      `) },
+    { id:"naming-standards", title:"Naming Standards", tags:"naming standards conventions",
+      html: card("Standards & Templates","Naming Standards", `
+      <table>
+        <tr><th>Artefact</th><th>Convention</th><th>Example</th></tr>
+        <tr><td>Test Case ID</td><td>TC_MODULE_###</td><td>TC_LOGIN_001</td></tr>
+        <tr><td>Automation Script</td><td>module_scenario.spec.ts</td><td>login_invalidPassword.spec.ts</td></tr>
+        <tr><td>RPA Workflow</td><td>Process_Module_Action.xaml</td><td>Billing_Attendance_Generate.xaml</td></tr>
+        <tr><td>Defect Title</td><td>[Module] Short description</td><td>[Checkout] Payment fails on expired card</td></tr>
+      </table>
+      `) },
+  ]
+},
+{
+  id:"knowledge-base", title:"Knowledge Base", icon:"8",
+  items:[
+    { id:"lessons-learned", title:"Lessons Learned", tags:"lessons learned retrospective insights",
+      html: card("Knowledge Base","Lessons Learned", `
+      <p>Captured at the end of each project/release cycle to avoid repeating avoidable mistakes.</p>
+      <ul>
+        <li>What went well and should be repeated</li>
+        <li>What caused delays or rework, and the root cause</li>
+        <li>Process or tooling changes recommended for the next cycle</li>
+      </ul>
+      <p>Logged in the shared Lessons Learned register with project, date, and owner — reviewed quarterly by the CoE.</p>
+      `) },
+    { id:"known-issues", title:"Known Issues", tags:"known issues limitations workarounds",
+      html: card("Knowledge Base","Known Issues", `
+      <p>Register of accepted or long-standing issues that testers should be aware of to avoid duplicate defect logging.</p>
+      <table>
+        <tr><th>Area</th><th>Issue</th><th>Workaround / Status</th></tr>
+        <tr><td>Environment</td><td>QA environment data resets nightly</td><td>Re-seed test data each morning before execution</td></tr>
+        <tr><td>Third-party integration</td><td>Sandbox payment gateway occasionally times out</td><td>Retry once; log only if it persists beyond 3 attempts</td></tr>
+      </table>
+      `) },
+    { id:"root-cause-analysis", title:"Root Cause Analysis", tags:"root cause analysis rca 5 whys",
+      html: card("Knowledge Base","Root Cause Analysis", `
+      <p>RCA is performed for recurring or critical defects to address the underlying cause, not just the symptom.</p>
+      <ul>
+        <li>Use the "5 Whys" technique to trace the defect back to its origin</li>
+        <li>Classify root cause: Requirements, Design, Code, Environment, Data, Process</li>
+        <li>Document corrective and preventive actions, with an owner and due date</li>
+        <li>Feed recurring categories into the Quality Metrics trend review</li>
+      </ul>
+      `) },
+    { id:"faqs-kb", title:"FAQs", tags:"faq knowledge base questions",
+      html: card("Knowledge Base","FAQs", `
+      <p><b>Q: Where do I check if an issue is already known?</b><br>Check the Known Issues register before logging a new defect.</p>
+      <p><b>Q: How do I contribute a lesson learned?</b><br>Submit via the retro template to your Test Lead, who logs it in the shared register.</p>
+      <p><b>Q: What counts as a "recurring" defect for RCA?</b><br>Three or more occurrences of the same root cause category within a release cycle.</p>
+      `) },
+    { id:"troubleshooting-guides", title:"Troubleshooting Guides", tags:"troubleshooting guides common problems",
+      html: card("Knowledge Base","Troubleshooting Guides", `
+      <table>
+        <tr><th>Problem</th><th>Guide</th></tr>
+        <tr><td>Automation suite fails in CI only</td><td>See Automation → Troubleshooting</td></tr>
+        <tr><td>RPA robot stuck</td><td>See RPA → Troubleshooting</td></tr>
+        <tr><td>Performance results inconsistent</td><td>See Performance Testing → Monitoring & Analysis</td></tr>
+        <tr><td>Environment access denied</td><td>See Getting Started → Access & Tools</td></tr>
+      </table>
+      `) },
+  ]
+},
+{
+  id:"learning-training", title:"Learning & Training", icon:"9",
+  items:[
+    { id:"learning-paths", title:"Learning Paths", tags:"learning paths curriculum roadmap",
+      html: card("Learning & Training","Learning Paths", `
+      <ul>
+        <li><b>QA Foundation</b> — SDLC/STLC, test design techniques, defect lifecycle</li>
+        <li><b>Automation Track</b> — Playwright/TypeScript fundamentals → framework design → CI/CD integration</li>
+        <li><b>Performance Track</b> — load testing tool fundamentals → workload modelling → APM analysis</li>
+        <li><b>RPA Track</b> — UiPath fundamentals → REFramework → exception handling and deployment</li>
+        <li><b>Leadership Track</b> — client communication, estimation, people management (aligned to the Associate Test Manager → Test Manager progression)</li>
+      </ul>
+      `) },
+    { id:"training-material", title:"Training Material", tags:"training material slides guides",
+      html: card("Learning & Training","Training Material", `
+      <p>Slide decks, one-pagers, and guides used in onboarding and skill-building sessions, including the Media & Entertainment and Gaming domain KT documents covering testing disciplines, platform certification, defect taxonomy, and glossaries.</p>
+      `) },
+    { id:"recorded-sessions", title:"Recorded Sessions", tags:"recorded sessions videos webinars",
+      html: card("Learning & Training","Recorded Sessions", `
+      <p>Recordings of internal knowledge-sharing sessions, domain walkthroughs, and tool demos, indexed by topic and date on the shared drive. Newly recorded sessions should be logged here within one week with a short abstract for discoverability.</p>
+      `) },
+    { id:"certifications", title:"Certifications", tags:"certifications istqb recommended",
+      html: card("Learning & Training","Certifications", `
+      <ul>
+        <li>ISTQB Foundation Level — baseline for all QA engineers</li>
+        <li>ISTQB Advanced (Test Manager / Test Analyst) — for leads and managers</li>
+        <li>UiPath Certified RPA Associate/Developer — for RPA stream</li>
+        <li>Cloud/Performance tool certifications as relevant to account needs</li>
+      </ul>
+      `) },
+    { id:"reference-content", title:"Reference Content", tags:"reference content glossary reading list",
+      html: card("Learning & Training","Reference Content", `
+      <p>Curated glossary of QA/automation/RPA terminology, external reading list, and links to tool documentation (Playwright, UiPath, Jira/TestRail) for self-paced learning.</p>
+      `) },
+  ]
+},
+{
+  id:"governance", title:"Governance", icon:"10",
+  items:[
+    { id:"document-ownership", title:"Document Ownership", tags:"document ownership knowledge owner sme",
+      html: card("Governance","Document Ownership", `
+      <ul>
+        <li><b>Knowledge Owner</b> — maintains content relevance and accuracy for their pillar</li>
+        <li><b>Subject Matter Expert</b> — creates and updates content</li>
+        <li><b>Reviewer</b> — validates quality and compliance before publishing</li>
+        <li><b>Consumers</b> — use content, provide feedback, suggest improvements</li>
+        <li><b>Governance Team</b> — monitors adherence, review cycles, and reporting</li>
+      </ul>
+      <p>Every page in OGE University must have a named Knowledge Owner listed at the point of publishing.</p>
+      `) },
+    { id:"review-cadence", title:"Review Cadence", tags:"review cadence schedule frequency",
+      html: card("Governance","Review Cadence", `
+      <table>
+        <tr><th>Content Type</th><th>Review Frequency</th></tr>
+        <tr><td>Handbook / Process SOPs</td><td>Quarterly</td></tr>
+        <tr><td>Templates & Standards</td><td>Quarterly or on major process change</td></tr>
+        <tr><td>Automation / RPA Standards</td><td>Every 6 months or on framework upgrade</td></tr>
+        <tr><td>Learning Material</td><td>Annually</td></tr>
+      </table>
+      `) },
+    { id:"version-control", title:"Version Control", tags:"version control history change log",
+      html: card("Governance","Version Control", `
+      <ul>
+        <li>Every document carries a version number, last-updated date, and change summary</li>
+        <li>Major structural changes require a version bump (v1.0 → v2.0); minor edits increment decimally (v1.0 → v1.1)</li>
+        <li>Historical versions retained in the shared repository for audit purposes</li>
+      </ul>
+      `) },
+    { id:"change-management", title:"Change Management", tags:"change management approval process",
+      html: card("Governance","Change Management", `
+      <ol>
+        <li>Propose change with rationale to the Knowledge Owner</li>
+        <li>Reviewer validates accuracy and impact on linked content</li>
+        <li>Governance Team approves and schedules the update</li>
+        <li>Change communicated to consumers via the CoE channel and reflected in the version log</li>
+      </ol>
+      `) },
+  ]
+},
+];
+
+/* =========================================================================
+   PERSISTENCE
+   Every upload, edit, add, or delete is saved to this browser's local
+   storage, so the knowledge base survives page refreshes AND re-logins
+   (Contributor or Guest) — everyone sees the same latest state on this machine.
+   Note: this is per-browser, per-file storage (there's no server/database
+   behind this page), so it persists as long as you keep opening this same
+   saved HTML file rather than a freshly re-downloaded copy.
+   ========================================================================= */
+const KB_STORAGE_KEY = 'ogeUniversity.knowledgeBase.v1';
+
+function loadPersistedPillars(){
+  try{
+    const raw = localStorage.getItem(KB_STORAGE_KEY);
+    if(!raw) return null;
+    const saved = JSON.parse(raw);
+    if(Array.isArray(saved) && saved.length) return saved;
+  } catch(e){ console.warn('Could not read saved knowledge base:', e); }
+  return null;
+}
+
+function persistPillars(){
+  try{ localStorage.setItem(KB_STORAGE_KEY, JSON.stringify(PILLARS)); }
+  catch(e){ console.warn('Could not save knowledge base (storage may be full):', e); }
+}
+
+(function applyPersistedState(){
+  const saved = loadPersistedPillars();
+  if(saved){
+    PILLARS.length = 0;
+    saved.forEach(p => PILLARS.push(p));
+  }
+})();
+
+/* =========================================================================
+   RENDERING
+   ========================================================================= */
+const menu = document.getElementById('menu');
+// NOTE: #catGrid is looked up fresh inside buildCatGrid() each time (not
+// cached at top level) since goHome() can recreate #welcome/#catGrid after
+// it's been replaced by navigating elsewhere.
+const contentArea = document.getElementById('content-area');
+const crumbs = document.getElementById('crumbs');
+
+// flat searchable index (rebuilt whenever a pillar/item is added, e.g. after a KB upload)
+let INDEX = [];
+function rebuildIndex(){
+  INDEX = [];
+  PILLARS.forEach(p=> p.items.forEach(it=> INDEX.push({pillar:p, item:it})));
+}
+
+function buildMenu(filter){
+  menu.innerHTML = '';
+  const f = (filter||'').trim().toLowerCase();
+  PILLARS.forEach(p=>{
+    // MODIFIED: the sidebar used to show two separate things stacked on
+    // top of each other — the pillar's flat curated-article list, then a
+    // second block of folders below it — which was confusing (folders
+    // and articles with the same name showing twice, once each way).
+    // Folders are now the only sidebar sub-items; curated articles still
+    // exist and are still reachable (via search, and via a folder of the
+    // same name for pillars that were seeded with one — see the earlier
+    // default-folder seeding), just not duplicated here.
+    const matchFolders = FOLDER_ENABLED_PILLARS.includes(p.id)
+      ? foldersOf(p.id, null).filter(fo => !f || fo.name.toLowerCase().includes(f) || p.title.toLowerCase().includes(f))
+      : [];
+    if (f && matchFolders.length===0) return;
+
+    const wrap = document.createElement('div');
+    wrap.className = 'pillar';
+    wrap.dataset.pillar = p.id;
+    if (f) wrap.classList.add('open');
+
+    const btn = document.createElement('button');
+    btn.className = 'pillar-btn';
+    btn.innerHTML = `<span class="pillar-num">${p.icon}</span><span class="pillar-label">${p.title}</span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>`;
+    btn.onclick = ()=>{
+      wrap.classList.toggle('open');
+    };
+    wrap.appendChild(btn);
+
+    const sub = document.createElement('div');
+    sub.className = 'submenu';
+
+    // Folder browser entries — same folders shown on the pillar's dashboard
+    // tile, also reachable straight from the sidebar without an extra click.
+    if(FOLDER_ENABLED_PILLARS.includes(p.id)){
+      const topFolders = f ? matchFolders : foldersOf(p.id, null);
+      topFolders.forEach(folder=>{
+        const sb = document.createElement('button');
+        sb.className = 'sub-btn sub-btn-folder';
+        sb.textContent = `📁 ${folder.name}`;
+        sb.dataset.folderId = folder.id;
+        sb.onclick = ()=> renderFolderPage(folder);
+        sub.appendChild(sb);
+      });
+    }
+
+    wrap.appendChild(sub);
+    menu.appendChild(wrap);
+  });
+}
+
+function buildCatGrid(){
+  const catGrid = document.getElementById('catGrid');
+  if(!catGrid) return; // #welcome isn't the current view — nothing to populate
+  catGrid.innerHTML = '';
+  PILLARS.forEach(p=>{
+    const c = document.createElement('div');
+    c.className='cat-card';
+    const folderReady = FOLDER_ENABLED_PILLARS.includes(p.id);
+    c.innerHTML = `<div class="n">PILLAR ${p.icon}</div><div class="t">${p.title}</div><div class="c">${folderReady ? '📁 Folder browser' : p.items.length + ' knowledge assets'}</div>`;
+    c.onclick = ()=> folderReady ? openPillarDashboard(p) : openPillarOverview(p);
+    catGrid.appendChild(c);
+  });
+}
+
+// Rebuilds the welcome/dashboard page (it gets fully replaced whenever you
+// navigate into an item, folder, or file — this recreates it from scratch)
+// so the logo and breadcrumb "Home" link work from literally anywhere.
+function goHome(){
+  clearActiveSub();
+  crumbs.innerHTML = `<b class="crumb-home" data-go-home>OGE University</b> / Home`;
+  contentArea.innerHTML = `
+    <div id="welcome">
+      <h2>Welcome to OGE University</h2>
+      <p class="sub">A single source of truth for QA, Test Automation, RPA, delivery processes, standards, learning assets, and operational knowledge. Browse a pillar on the left, or ask the assistant in the bottom-right corner — e.g. "give me the test plan template".</p>
+      <div class="cat-grid" id="catGrid"></div>
+    </div>
+  `;
+  buildCatGrid();
+  contentArea.scrollTop = 0;
+}
+
+document.getElementById('brand').addEventListener('click', goHome);
+crumbs.addEventListener('click', (e)=>{
+  if(e.target.closest('[data-go-home]')){ goHome(); return; }
+  const pillarLink = e.target.closest('[data-go-pillar]');
+  if(pillarLink){ goToPillar(pillarLink.dataset.goPillar); return; }
+  const dashLink = e.target.closest('[data-go-pillar-dash]');
+  if(dashLink){ goToPillarDashboard(dashLink.dataset.goPillarDash); return; }
+  const folderLink = e.target.closest('[data-go-folder]');
+  if(folderLink){
+    const folder = folderById(folderLink.dataset.goFolder);
+    if(folder) renderFolderPage(folder);
+  }
+});
+
+// NEW: breadcrumb "one step back" to a pillar's curated-article overview
+// (the flat list view — openPillarOverview) or its folder-browser
+// dashboard (openPillarDashboard), depending on which one is relevant to
+// the page the breadcrumb is shown on.
+function goToPillar(pillarId){
+  const pillar = PILLARS.find(p => p.id === pillarId);
+  if(pillar) openPillarOverview(pillar);
+}
+function goToPillarDashboard(pillarId){
+  const pillar = PILLARS.find(p => p.id === pillarId);
+  if(pillar) openPillarDashboard(pillar);
+}
+
+function clearActiveSub(){
+  document.querySelectorAll('.sub-btn.active').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.pillar-btn.active-parent').forEach(b=>b.classList.remove('active-parent'));
+}
+
+// Clicking a PILLAR card (e.g. on the welcome page) renders that pillar's
+// contents directly in the same content area — no separate page/navigation.
+function openPillarOverview(pillar){
+  clearActiveSub();
+  const wrap = menu.querySelector(`.pillar[data-pillar="${pillar.id}"]`);
+  if(wrap){
+    wrap.classList.add('open');
+    wrap.querySelector('.pillar-btn').classList.add('active-parent');
+  }
+  crumbs.innerHTML = `<b class="crumb-home" data-go-home>OGE University</b> / ${pillar.title}`;
+
+  const rows = pillar.items.map(it => `
+    <button class="pillar-item-row" data-id="${it.id}">
+      <span class="pi-title">${it.title}</span>
+      <span class="pi-arrow">Open →</span>
+    </button>
+  `).join('');
+
+  const emptyState = pillar.items.length === 0
+    ? `<p style="color:var(--ink-soft);">This pillar has no knowledge assets yet.</p>` : '';
+
+  const adminToolbar = isAdmin()
+    ? `<div class="card-toolbar"><button class="tbtn add" id="addContentBtn">+ Add New Content</button></div>`
+    : '';
+
+  contentArea.innerHTML = `
+    <div class="doc-card">
+      ${adminToolbar}
+      <div class="doc-eyebrow">Pillar ${pillar.icon}</div>
+      <h2>${pillar.title}</h2>
+      <div class="ui-path"><span class="pin">📍</span><span class="seg">Sidebar</span><span class="sep">›</span><span class="seg leaf">${pillar.title}</span></div>
+      <p>${pillar.items.length} knowledge asset${pillar.items.length===1?'':'s'} in this pillar. Select one below to view it here.</p>
+      ${emptyState}
+      <div class="pillar-item-list">${rows}</div>
+    </div>
+  `;
+  contentArea.querySelectorAll('.pillar-item-row').forEach(row=>{
+    row.onclick = ()=>{
+      const it = pillar.items.find(x=>x.id === row.dataset.id);
+      if(it) openItem(pillar, it, false);
+    };
+  });
+  if(isAdmin()){
+    const addBtn = document.getElementById('addContentBtn');
+    if(addBtn) addBtn.onclick = ()=> openAddForm(pillar);
+  }
+  contentArea.scrollTop = 0;
+}
+
+function openItem(pillar, item, fromMenuClick){
+  clearActiveSub();
+  const wrap = menu.querySelector(`.pillar[data-pillar="${pillar.id}"]`);
+  if(wrap){
+    wrap.classList.add('open');
+    wrap.querySelector('.pillar-btn').classList.add('active-parent');
+    const sb = wrap.querySelector(`.sub-btn[data-id="${item.id}"]`);
+    if(sb) sb.classList.add('active');
+  }
+  crumbs.innerHTML = `<b class="crumb-home" data-go-home>OGE University</b> / <span class="crumb-link" data-go-pillar="${pillar.id}">${pillar.title}</span> / ${item.title}`;
+
+  // NEW: uploaded documents (anything with a stored fileUrl) get a
+  // Download button alongside Edit/Delete — Contributor-only, same as the
+  // rest of this toolbar.
+  const downloadBtn = (isAdmin() && item.fileUrl)
+    ? `<button class="tbtn download" id="downloadContentBtn">⬇ Download</button>`
+    : '';
+
+  const adminToolbar = isAdmin()
+    ? `<div class="card-toolbar">
+        ${downloadBtn}
+        <button class="tbtn edit" id="editContentBtn">✎ Edit</button>
+        <button class="tbtn delete" id="deleteContentBtn">🗑 Delete</button>
+      </div>`
+    : '';
+
+  contentArea.innerHTML = `<div class="doc-card">${adminToolbar}${item.html}</div>`;
+
+  if(isAdmin()){
+    const editBtn = document.getElementById('editContentBtn');
+    const delBtn = document.getElementById('deleteContentBtn');
+    const dlBtn = document.getElementById('downloadContentBtn');
+    if(editBtn) editBtn.onclick = ()=> openEditForm(pillar, item);
+    if(delBtn) delBtn.onclick = ()=> deleteContent(pillar, item);
+    if(dlBtn) dlBtn.onclick = ()=> downloadSingleFile(item.fileUrl, item.fileName || item.title);
+  }
+  contentArea.scrollTop = 0;
+}
+
+/* =========================================================================
+   ADMIN: ADD / EDIT / DELETE CONTENT
+   Reuses the same card() renderer, so edited/added content keeps the exact
+   same design (eyebrow, heading, UI-path breadcrumb, spacing) as every
+   other tab. Editing/adding/removing content never touches layout — the
+   sidebar menu, category grid, and footer counts are simply rebuilt from
+   the same PILLARS data structure after every change.
+   ========================================================================= */
+function isAdmin(){ return currentRole === 'admin'; }
+
+// Pull just the authored body content back out of a rendered item.html
+// (strips the auto-generated eyebrow / heading / UI-path wrapper that
+// card() adds, so the edit textarea only shows the editable part).
+function extractBodyHtml(fullHtml){
+  const tmp = document.createElement('div');
+  tmp.innerHTML = fullHtml;
+  const eyebrow = tmp.querySelector('.doc-eyebrow');
+  if(eyebrow) eyebrow.remove();
+  const h2 = tmp.querySelector('h2');
+  if(h2) h2.remove();
+  const path = tmp.querySelector('.ui-path');
+  if(path) path.remove();
+  return tmp.innerHTML.trim();
+}
+
+function renderEditForm(pillar, opts){
+  // opts: { title, bodyHtml, isNew, onSave }
+  crumbs.innerHTML = `<b class="crumb-home" data-go-home>OGE University</b> / <span class="crumb-link" data-go-pillar="${pillar.id}">${pillar.title}</span> / ${opts.isNew ? 'Add New Content' : opts.title} <span style="color:var(--teal);">(editing)</span>`;
+  contentArea.innerHTML = `
+    <div class="doc-card">
+      <div class="doc-eyebrow">${pillar.title}</div>
+      <h2>${opts.isNew ? 'Add New Content' : 'Edit: ' + opts.title}</h2>
+      <div class="ui-path"><span class="pin">📍</span><span class="seg">Sidebar</span><span class="sep">›</span><span class="seg">${pillar.title}</span><span class="sep">›</span><span class="seg leaf">${opts.isNew ? 'New' : opts.title}</span></div>
+      <div class="edit-form">
+        <div class="f-group">
+          <label>Title</label>
+          <input type="text" id="ef-title" value="${escapeHtml(opts.title)}" placeholder="e.g. Test Plan Template">
+        </div>
+
+        <div class="f-group">
+          <div class="wysiwyg-header">
+            <label style="margin-bottom:0;">✨ Compose Visually — no HTML knowledge needed</label>
+            <span class="wysiwyg-subtitle">Write and format your content below, then click "Convert &amp; Insert" to fill in the content box for you.</span>
+          </div>
+          <div class="wysiwyg-toolbar" id="wysiwygToolbar">
+            <button type="button" data-cmd="bold" title="Bold"><b>B</b></button>
+            <button type="button" data-cmd="italic" title="Italic"><i>I</i></button>
+            <button type="button" data-cmd="underline" title="Underline"><u>U</u></button>
+            <span class="wysiwyg-sep"></span>
+            <button type="button" data-cmd="insertUnorderedList" title="Bullet list">• List</button>
+            <button type="button" data-cmd="insertOrderedList" title="Numbered list">1. List</button>
+            <span class="wysiwyg-sep"></span>
+            <button type="button" data-cmd="formatBlock" data-val="H3" title="Heading">H3</button>
+            <button type="button" data-cmd="formatBlock" data-val="P" title="Paragraph">¶ Text</button>
+            <button type="button" data-cmd="createLink" title="Insert link">🔗 Link</button>
+            <span class="wysiwyg-sep"></span>
+            <button type="button" data-cmd="removeFormat" title="Clear formatting">⌫ Clear</button>
+          </div>
+          <div class="wysiwyg-editor" id="wysiwygEditor" contenteditable="true"
+               data-placeholder="Start typing here — select text and use the toolbar above for bold, bullet points, headings, links, etc."></div>
+          <button type="button" class="wysiwyg-convert-btn" id="wysiwygConvertBtn">⬇ Convert &amp; Insert into Content Box</button>
+        </div>
+
+        <div class="f-group">
+          <label>Content (HTML)</label>
+          <textarea id="ef-body" spellcheck="false">${escapeHtml(opts.bodyHtml)}</textarea>
+          <div class="hint">Prefer writing HTML directly? Go ahead — use the same tags as the rest of the knowledge centre: &lt;p&gt;, &lt;ul&gt;&lt;li&gt;, &lt;ol&gt;&lt;li&gt;, &lt;table&gt;, &lt;h3&gt;, &lt;b&gt;. Otherwise, use the composer above and it'll be filled in for you.</div>
+        </div>
+
+        <div class="form-actions">
+          <button class="save" id="ef-save">${opts.isNew ? 'Add Content' : 'Save Changes'}</button>
+          <button class="cancel" id="ef-cancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Visual composer: turns toolbar clicks into real HTML behind the scenes
+  // (execCommand on a contenteditable box), then a single button copies
+  // that generated HTML straight into the same content box Save reads from.
+  const wysiwygEditor = document.getElementById('wysiwygEditor');
+  document.querySelectorAll('#wysiwygToolbar button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      wysiwygEditor.focus();
+      const cmd = btn.dataset.cmd;
+      if(cmd === 'createLink'){
+        const url = window.prompt('Link URL (e.g. https://example.com):');
+        if(!url) return;
+        document.execCommand('createLink', false, url);
+      } else if(cmd === 'formatBlock'){
+        document.execCommand('formatBlock', false, btn.dataset.val);
+      } else {
+        document.execCommand(cmd, false, null);
+      }
+    });
+  });
+  document.getElementById('wysiwygConvertBtn').onclick = ()=>{
+    const generated = wysiwygEditor.innerHTML.trim();
+    if(!generated || generated === '<br>'){
+      alert('Write something in the composer box above first.');
+      return;
+    }
+    const bodyBox = document.getElementById('ef-body');
+    if(bodyBox.value.trim() && !window.confirm(`This will replace what's currently in the "Content (HTML)" box below with what you just composed. Continue?`)){
+      return;
+    }
+    bodyBox.value = generated;
+    bodyBox.scrollIntoView({ behavior:'smooth', block:'center' });
+    bodyBox.style.outline = '2px solid var(--gold)';
+    setTimeout(()=>{ bodyBox.style.outline = ''; }, 1200);
+  };
+
+  document.getElementById('ef-save').onclick = ()=>{
+    const newTitle = document.getElementById('ef-title').value.trim() || opts.title || 'Untitled';
+    const newBody = document.getElementById('ef-body').value;
+    opts.onSave(newTitle, newBody);
+  };
+  document.getElementById('ef-cancel').onclick = opts.onCancel;
+  contentArea.scrollTop = 0;
+}
+
+function openEditForm(pillar, item){
+  if(!isAdmin()) return;
+  renderEditForm(pillar, {
+    title: item.title,
+    bodyHtml: extractBodyHtml(item.html),
+    isNew: false,
+    onSave: (newTitle, newBody)=>{
+      item.title = newTitle;
+      item.tags = (item.tags + ' ' + newTitle).toLowerCase();
+      item.html = card(pillar.title, newTitle, newBody);
+      rebuildAll(document.getElementById('menuFilter').value);
+      openItem(pillar, item, false);
+    },
+    onCancel: ()=> openItem(pillar, item, false)
+  });
+}
+
+function openAddForm(pillar){
+  if(!isAdmin()) return;
+  renderEditForm(pillar, {
+    title: '',
+    bodyHtml: '<p>Write the content for this new knowledge asset here.</p>',
+    isNew: true,
+    onSave: (newTitle, newBody)=>{
+      const id = pillar.id + '-' + slugify(newTitle) + '-' + Math.random().toString(36).slice(2,7);
+      const newItem = { id, title: newTitle, tags: newTitle.toLowerCase(), html: card(pillar.title, newTitle, newBody) };
+      pillar.items.push(newItem);
+      rebuildAll(document.getElementById('menuFilter').value);
+      // Back to the pillar overview (not the new item) so "+ Add New
+      // Content" is immediately visible again for adding the next one,
+      // without an extra trip back through the sidebar.
+      openPillarOverview(pillar);
+    },
+    onCancel: ()=> openPillarOverview(pillar)
+  });
+}
+
+function deleteContent(pillar, item){
+  if(!isAdmin()) return;
+  const ok = window.confirm(`Delete "${item.title}" from ${pillar.title}? This cannot be undone.`);
+  if(!ok) return;
+  pillar.items = pillar.items.filter(x=>x.id !== item.id);
+  rebuildAll(document.getElementById('menuFilter').value);
+  openPillarOverview(pillar);
+}
+
+function refreshFooterStats(){
+  const totalItems = PILLARS.reduce((n,p)=>n+p.items.length,0);
+  document.getElementById('footer-stats').textContent =
+    `${PILLARS.length} Pillars · ${totalItems} Knowledge Assets · v1.0`;
+}
+
+function rebuildAll(filter){
+  buildMenu(filter||'');
+  buildCatGrid();
+  refreshFooterStats();
+  rebuildIndex();
+  persistPillars();
+}
+
+document.getElementById('menuFilter').addEventListener('input', (e)=>{
+  buildMenu(e.target.value);
+});
+
+/* =========================================================================
+   ROLE / LOGIN GATE
+   Contributor -> can see & use the "Upload Knowledge Base" panel.
+   Guest -> that panel is not rendered in the DOM at all.
+   ========================================================================= */
+let currentRole = null;
+const roleGate   = document.getElementById('role-gate');
+const rolePill   = document.getElementById('rolePill');
+
+function setRole(role){
+  currentRole = role;
+  roleGate.classList.add('hidden');
+  if(role === 'admin'){
+    rolePill.textContent = 'Contributor';
+    rolePill.className = 'role-pill admin';
+  } else {
+    rolePill.textContent = 'Guest';
+    rolePill.className = 'role-pill guest';
+  }
+}
+
+const ADMIN_PASSWORD = 'Tx@98754';
+const gateRoles     = document.getElementById('gate-roles');
+const gateAdminPwd  = document.getElementById('gate-admin-pwd');
+const adminPwdInput = document.getElementById('adminPwdInput');
+const adminPwdError = document.getElementById('adminPwdError');
+
+function showAdminPwdStep(){
+  gateRoles.classList.add('hidden');
+  gateAdminPwd.classList.remove('hidden');
+  adminPwdError.style.display = 'none';
+  adminPwdInput.value = '';
+  adminPwdInput.focus();
+}
+function backToRoleChoice(){
+  gateAdminPwd.classList.add('hidden');
+  gateRoles.classList.remove('hidden');
+}
+function tryAdminLogin(){
+  if(adminPwdInput.value === ADMIN_PASSWORD){
+    setRole('admin');
+    backToRoleChoice(); // reset gate UI for next time "Switch" is used
+  } else {
+    adminPwdError.style.display = 'block';
+    adminPwdInput.value = '';
+    adminPwdInput.focus();
+  }
+}
+
+document.getElementById('loginAdmin').onclick = showAdminPwdStep;
+document.getElementById('loginGuest').onclick = ()=> setRole('guest');
+document.getElementById('adminPwdSubmit').onclick = tryAdminLogin;
+document.getElementById('adminPwdBack').onclick = backToRoleChoice;
+adminPwdInput.addEventListener('keydown', e=>{ if(e.key==='Enter') tryAdminLogin(); });
+document.getElementById('switchRole').onclick = ()=>{
+  roleGate.classList.remove('hidden');
+  backToRoleChoice();
+};
+
+// Initial render — this is what actually populates the sidebar menu and
+// the welcome-page pillar cards on first load.
+rebuildAll('');
+
+// NEW: seeds one default top-level folder per pillar, per existing
+// sidebar item — e.g. the "Getting Started" pillar gets a "QA Handbook"
+// folder, a "Team Overview" folder, and so on, mirroring the menu
+// structure into the folder browser. Contributors can still create more
+// folders and upload files into any of them exactly as before; this just
+// gives every pillar a sensible starting structure instead of an empty
+// folder browser.
+//
+// Idempotent by design: checks each pillar's existing folders (by exact
+// name, case-insensitive) before creating anything, so running this again
+// on a later page load — or after someone's already added their own
+// folders — never creates duplicates.
+async function ensureDefaultFoldersForAllPillars(){
+  const toCreate = [];
+  PILLARS.forEach(pillar=>{
+    pillar.items.forEach(item=>{
+      const exists = ALL_FOLDERS.some(f =>
+        f.pillar === pillar.id &&
+        !f.parent_id &&
+        (f.name || '').toLowerCase() === item.title.toLowerCase()
+      );
+      if(!exists) toCreate.push({ pillarId: pillar.id, name: item.title });
+    });
+  });
+  if(!toCreate.length) return false;
+
+  console.log(`Seeding ${toCreate.length} default folder(s)...`);
+  const results = await Promise.allSettled(
+    toCreate.map(t => createFolder(t.pillarId, null, t.name))
+  );
+  const failed = results.filter(r => r.status === 'rejected');
+  if(failed.length) console.warn(`${failed.length} default folder(s) failed to create:`, failed.map(r=>r.reason));
+  console.log(`✅ Default folder seeding complete (${results.length - failed.length}/${toCreate.length} created).`);
+  return true;
+}
+
+// Runs once after the page's initial folders/docs fetch actually finishes
+// (the fire-and-forget loadFoldersAndDocs() call above may not have
+// resolved yet by the time rebuildAll('') above runs synchronously — so
+// that first render happens before ALL_FOLDERS has any data in it at all).
+// MODIFIED: this used to only call rebuildAll() again when
+// ensureDefaultFoldersForAllPillars() actually created something new —
+// which meant that on any page load *after* the first successful seed
+// (i.e. every load from here on, since seeding is idempotent and finds
+// nothing left to create), the sidebar just kept showing its empty,
+// pre-fetch render forever, with real folders sitting in ALL_FOLDERS the
+// whole time but never actually re-rendered. Always rebuilding here fixes
+// that — cheap to do even when nothing changed.
+(async ()=>{
+  await loadFoldersAndDocs();
+  await ensureDefaultFoldersForAllPillars();
+  rebuildAll(document.getElementById('menuFilter').value);
+})();
+
+/* =========================================================================
+   FOLDER-BASED DOCUMENT MANAGEMENT
+   Each of the 10 pillars can now contain an unlimited tree of folders
+   (Supabase table "folders", self-referencing via parent_id). Files live
+   inside folders (existing "documents" table, extended with folder_id +
+   content columns). This completely replaces the old flat "Uploaded
+   Knowledge Base" pillar and the sidebar upload panel — uploads now only
+   happen from inside a folder.
+
+   Required Supabase schema (run once in the SQL editor):
+
+     create table if not exists folders (
+       id uuid primary key default gen_random_uuid(),
+       name text not null,
+       parent_id uuid references folders(id) on delete cascade,
+       pillar text not null,
+       created_at timestamptz default now()
+     );
+     create index if not exists idx_folders_parent on folders(parent_id);
+     create index if not exists idx_folders_pillar on folders(pillar);
+
+     alter table documents add column if not exists folder_id uuid references folders(id) on delete cascade;
+     alter table documents add column if not exists content text;
+     alter table documents add column if not exists uploaded_by text;
+     create index if not exists idx_documents_folder on documents(folder_id);
+   ========================================================================= */
+
+function folderById(id){ return ALL_FOLDERS.find(f => f.id === id); }
+function foldersOf(pillarId, parentId){
+  return ALL_FOLDERS.filter(f => f.pillar === pillarId && (f.parent_id || null) === (parentId || null));
+}
+function docsOf(folderId){
+  return ALL_DOCS.filter(d => d.folder_id === folderId);
+}
+function folderBreadcrumb(folder){
+  const chain = [];
+  let f = folder;
+  let guard = 0;
+  while(f && guard++ < 50){
+    chain.unshift(f);
+    f = f.parent_id ? folderById(f.parent_id) : null;
+  }
+  return chain;
+}
+function fileTypeIcon(ext){
+  ext = (ext || '').toLowerCase();
+  if(ext === 'docx' || ext === 'doc') return '📄';
+  if(ext === 'pdf') return '📕';
+  if(ext === 'xlsx' || ext === 'xls' || ext === 'csv') return '📊';
+  if(ext === 'pptx' || ext === 'ppt') return '📽';
+  return '📄';
+}
+
+// ---------- Load everything once (Contributor and Guest both read the same live data) ----------
+async function loadFoldersAndDocs(){
+  try{
+    const [foldersRes, docsRes] = await Promise.all([
+      sb.from('folders').select('*').order('created_at', { ascending: true }),
+      sb.from('documents').select('*').not('folder_id', 'is', null)
+    ]);
+    if(foldersRes.error) console.error('Could not load folders:', foldersRes.error);
+    if(docsRes.error) console.error('Could not load documents:', docsRes.error);
+    ALL_FOLDERS = foldersRes.data || [];
+    ALL_DOCS = docsRes.data || [];
+    console.log(`✅ Loaded ${ALL_FOLDERS.length} folder(s) and ${ALL_DOCS.length} file(s) from Supabase.`);
+  } catch(err){
+    console.error('loadFoldersAndDocs failed:', err);
+  }
+}
+
+// ---------- Folder CRUD ----------
+async function createFolder(pillarId, parentId, name){
+  const { data, error } = await sb.from('folders')
+    .insert([{ name, parent_id: parentId || null, pillar: pillarId }])
+    .select();
+  if(error) throw error;
+  const row = data[0];
+  ALL_FOLDERS.push(row);
+  return row;
+}
+async function renameFolderDb(folder, newName){
+  const { error } = await sb.from('folders').update({ name: newName }).eq('id', folder.id);
+  if(error) throw error;
+  folder.name = newName;
+}
+function collectDescendantFolderIds(folderId){
+  const ids = [folderId];
+  let frontier = [folderId];
+  while(frontier.length){
+    const next = ALL_FOLDERS.filter(f => frontier.includes(f.parent_id)).map(f => f.id);
+    ids.push(...next);
+    frontier = next;
+  }
+  return ids;
+}
+async function deleteFolderCascade(folder){
+  const idsToDelete = collectDescendantFolderIds(folder.id);
+  const docsToDelete = ALL_DOCS.filter(d => idsToDelete.includes(d.folder_id));
+  for(const doc of docsToDelete){
+    if(doc.file_path){
+      try{ await sb.storage.from('knowledge-files').remove([doc.file_path]); }
+      catch(e){ console.warn('Storage delete failed for', doc.file_path, e); }
+    }
+  }
+  if(docsToDelete.length){
+    const { error } = await sb.from('documents').delete().in('id', docsToDelete.map(d => d.id));
+    if(error) console.warn('Bulk document delete had an issue (continuing):', error);
+  }
+  const { error: folderErr } = await sb.from('folders').delete().in('id', idsToDelete);
+  if(folderErr) throw folderErr;
+  ALL_DOCS = ALL_DOCS.filter(d => !idsToDelete.includes(d.folder_id));
+  ALL_FOLDERS = ALL_FOLDERS.filter(f => !idsToDelete.includes(f.id));
+}
+
+// ---------- File CRUD ----------
+async function renameFileDb(doc, newName){
+  const { error } = await sb.from('documents').update({ name: newName }).eq('id', doc.id);
+  if(error) throw error;
+  doc.name = newName;
+}
+async function deleteFileDb(doc){
+  if(doc.file_path){
+    try{ await sb.storage.from('knowledge-files').remove([doc.file_path]); }
+    catch(e){ console.warn('Storage delete failed:', e); }
+  }
+  const { error } = await sb.from('documents').delete().eq('id', doc.id);
+  if(error) throw error;
+  ALL_DOCS = ALL_DOCS.filter(d => d.id !== doc.id);
+}
+
+// Reliable cross-origin download via blob (a plain `download` attribute
+// gets ignored by most browsers for cross-origin URLs like Supabase Storage).
+async function downloadSingleFile(fileUrl, filename){
+  if(!fileUrl){ alert('No original file is available for this document.'); return; }
+  try{
+    const res = await fetch(fileUrl);
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const blob = await res.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = filename || 'download';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=> URL.revokeObjectURL(blobUrl), 4000);
+  } catch(err){
+    console.error('Download failed:', err);
+    alert('Could not download this file — you can also open it in the preview and use "Open the original file directly".');
+  }
+}
+
+// ---------- Upload into a folder ----------
+async function saveDocumentRow({ folderId, name, kind, fileUrl, storagePath, fileType, content }){
+  const { data, error } = await sb.from('documents').insert([{
+    folder_id: folderId,
+    name: name,
+    category: kind,
+    description: '',
+    file_url: fileUrl,
+    file_path: storagePath,
+    // NEW: the live "documents" table has a separate `storage_path` column
+    // (distinct from file_path) that's set NOT NULL — nothing was writing
+    // to it, which is exactly what caused the
+    // `null value in column "storage_path" ... violates not-null constraint`
+    // error. Both columns get the same value (the real Storage object key,
+    // e.g. "1700000000000_myfile.docx") since they represent the same thing.
+    storage_path: storagePath,
+    file_type: fileType,
+    content: (content || '').slice(0, 100000),
+    uploaded_by: 'Contributor'
+  }]).select();
+  if(error) throw error;
+  return data[0];
+}
+
+async function uploadFilesToFolder(folder, fileList){
+  const files = Array.from(fileList);
+  const statusEl = document.getElementById('folderUploadStatus');
+  let ok = 0, failed = 0;
+
+  for(let i=0;i<files.length;i++){
+    const file = files[i];
+    const ext = file.name.split('.').pop().toLowerCase();
+    if(statusEl) statusEl.textContent = `Uploading ${i+1} of ${files.length}: ${file.name}…`;
+
+    // Stage 1: parse locally for searchable text where we can (docx/pdf/xlsx/pptx).
+    // Legacy .doc / .ppt still upload and preview fine (Office Online can open
+    // them) — they just don't get local text extraction for search.
+    let extracted = { plainText: '' }, kind = 'File';
+    try{
+      if(ext === 'docx'){ extracted = await extractDocx(file); kind = 'Word'; }
+      else if(ext === 'pdf'){ extracted = await extractPdf(file); kind = 'PDF'; }
+      else if(['xlsx','xls','csv'].includes(ext)){ extracted = await extractExcel(file); kind = 'Excel'; }
+      else if(ext === 'pptx'){ extracted = await extractPptx(file); kind = 'PowerPoint'; }
+      else if(ext === 'doc'){ kind = 'Word'; }
+      else if(ext === 'ppt'){ kind = 'PowerPoint'; }
+      else { console.warn('Unsupported format:', file.name); failed++; continue; }
+    } catch(err){
+      console.error('Parse error for', file.name, err);
+      failed++;
+      continue;
+    }
+
+    // Stage 2: upload the original file + save its record to Supabase.
+    try{
+      const { url, path } = await uploadFileToSupabase(file);
+      const row = await saveDocumentRow({
+        folderId: folder.id, name: file.name, kind, fileUrl: url, storagePath: path,
+        fileType: file.type, content: extracted.plainText
+      });
+      ALL_DOCS.push(row);
+      ok++;
+    } catch(err){
+      console.error('Upload/save error for', file.name, err);
+      failed++;
+    }
+  }
+
+  const finalMessage = failed
+    ? `Uploaded ${ok} of ${files.length} file(s) — ${failed} failed. Check the browser console for details.`
+    : `Uploaded ${ok} file${ok===1?'':'s'}.`;
+
+  renderFolderPage(folder);
+
+  // renderFolderPage() rebuilds the whole panel (including a fresh, empty
+  // #folderUploadStatus), so the result message has to be applied AFTER
+  // that re-render, not before it — otherwise it's wiped out instantly.
+  const freshStatusEl = document.getElementById('folderUploadStatus');
+  if(freshStatusEl) freshStatusEl.textContent = finalMessage;
+}
+
+// ---------- Card templates ----------
+function folderCardHtml(folder){
+  const childCount = ALL_FOLDERS.filter(f => f.parent_id === folder.id).length;
+  const fileCount = ALL_DOCS.filter(d => d.folder_id === folder.id).length;
+  return `
+    <div class="folder-card" data-folder-id="${folder.id}">
+      <div class="folder-card-icon">📁</div>
+      <div class="folder-card-name">${escapeHtml(folder.name)}</div>
+      <div class="folder-card-meta">${childCount} folder${childCount===1?'':'s'} · ${fileCount} file${fileCount===1?'':'s'}</div>
+      ${isAdmin() ? `
+        <div class="folder-card-actions">
+          <button class="fc-action" data-action="rename" title="Rename folder">✎</button>
+          <button class="fc-action delete" data-action="delete" title="Delete folder">🗑</button>
+        </div>` : ''}
+    </div>`;
+}
+function fileCardHtml(doc){
+  const ext = (doc.file_path || doc.name || '').split('.').pop();
+  return `
+    <div class="file-card" data-doc-id="${doc.id}">
+      <div class="file-card-icon">${fileTypeIcon(ext)}</div>
+      <div class="file-card-name">${escapeHtml(doc.name)}</div>
+      <div class="file-card-meta">${escapeHtml(doc.category || 'File')}</div>
+      <div class="file-card-actions">
+        <button class="fc-action" data-action="open" title="Open">👁</button>
+        <button class="fc-action" data-action="download" title="Download">⬇</button>
+        ${isAdmin() ? `
+          <button class="fc-action" data-action="rename" title="Rename">✎</button>
+          <button class="fc-action delete" data-action="delete" title="Delete">🗑</button>` : ''}
+      </div>
+    </div>`;
+}
+
+// ---------- Shared wiring for folder/file cards (used on both the pillar
+// dashboard and folder pages) ----------
+function wireFolderCards(root, onChange){
+  root.querySelectorAll('.folder-card').forEach(card=>{
+    const f = folderById(card.dataset.folderId);
+    if(!f) return;
+    card.addEventListener('click', (e)=>{
+      if(e.target.closest('.fc-action')) return;
+      renderFolderPage(f);
+    });
+    const renameBtn = card.querySelector('[data-action="rename"]');
+    if(renameBtn) renameBtn.onclick = async (e)=>{
+      e.stopPropagation();
+      const name = window.prompt('Rename folder:', f.name);
+      if(!name || !name.trim() || name.trim() === f.name) return;
+      try{ await renameFolderDb(f, name.trim()); onChange(); }
+      catch(err){ console.error(err); alert('Could not rename the folder — please try again.'); }
+    };
+    const deleteBtn = card.querySelector('[data-action="delete"]');
+    if(deleteBtn) deleteBtn.onclick = async (e)=>{
+      e.stopPropagation();
+      const childCount = ALL_FOLDERS.filter(x => x.parent_id === f.id).length;
+      const fileCount = ALL_DOCS.filter(x => x.folder_id === f.id).length;
+      const warn = (childCount || fileCount) ? ` This also deletes ${childCount} subfolder(s) and ${fileCount} file(s) inside it.` : '';
+      if(!window.confirm(`Delete "${f.name}"?${warn} This cannot be undone.`)) return;
+      try{ await deleteFolderCascade(f); onChange(); }
+      catch(err){ console.error(err); alert('Could not delete the folder — please try again.'); }
+    };
+  });
+}
+function wireFileCards(root, folder, onChange){
+  root.querySelectorAll('.file-card').forEach(card=>{
+    const doc = ALL_DOCS.find(d => d.id === card.dataset.docId);
+    if(!doc) return;
+    card.addEventListener('click', (e)=>{
+      if(e.target.closest('.fc-action')) return;
+      renderFileDetailPage(doc, folder);
+    });
+    const openBtn = card.querySelector('[data-action="open"]');
+    if(openBtn) openBtn.onclick = (e)=>{ e.stopPropagation(); renderFileDetailPage(doc, folder); };
+    const dlBtn = card.querySelector('[data-action="download"]');
+    if(dlBtn) dlBtn.onclick = (e)=>{ e.stopPropagation(); downloadSingleFile(doc.file_url, doc.name); };
+    const renameBtn = card.querySelector('[data-action="rename"]');
+    if(renameBtn) renameBtn.onclick = async (e)=>{
+      e.stopPropagation();
+      const name = window.prompt('Rename file:', doc.name);
+      if(!name || !name.trim() || name.trim() === doc.name) return;
+      try{ await renameFileDb(doc, name.trim()); onChange(); }
+      catch(err){ console.error(err); alert('Could not rename the file — please try again.'); }
+    };
+    const deleteBtn = card.querySelector('[data-action="delete"]');
+    if(deleteBtn) deleteBtn.onclick = async (e)=>{
+      e.stopPropagation();
+      if(!window.confirm(`Delete "${doc.name}"? This cannot be undone.`)) return;
+      try{ await deleteFileDb(doc); onChange(); }
+      catch(err){ console.error(err); alert('Could not delete the file — please try again.'); }
+    };
+  });
+}
+
+// ---------- Pillar dashboard: the folder browser's root page for a pillar.
+// Reached only from the welcome/home dashboard's PILLAR cards — the
+// sidebar's curated-article navigation is completely separate and unchanged. ----------
+function openPillarDashboard(pillar){
+  clearActiveSub();
+  buildMenu(document.getElementById('menuFilter').value);
+  crumbs.innerHTML = `<b class="crumb-home" data-go-home>OGE University</b> / ${pillar.title}`;
+
+  const topFolders = foldersOf(pillar.id, null);
+  const canManage = isAdmin();
+
+  contentArea.innerHTML = `
+    <div class="doc-card">
+      <div class="doc-eyebrow">Pillar ${pillar.icon}</div>
+      <h2>📁 ${escapeHtml(pillar.title)}</h2>
+      <div class="ui-path"><span class="pin">📍</span><span class="seg leaf">${escapeHtml(pillar.title)}</span></div>
+      <p>Browse this pillar's folders below — click into any folder for its files and subfolders.</p>
+      <div class="folder-toolbar">
+        ${canManage ? `<button class="tbtn add" id="newFolderBtnTop">+ New Folder</button>` : ''}
+        <button class="tbtn" id="dashboardRefreshBtn">⟳ Refresh</button>
+      </div>
+      ${topFolders.length
+        ? `<div class="folder-grid">${topFolders.map(folderCardHtml).join('')}</div>`
+        : `<p class="folder-empty-hint">No folders yet in this pillar.${canManage ? ' Click "+ New Folder" to create the first one.' : ''}</p>`}
+    </div>`;
+
+  wireFolderCards(contentArea, ()=> openPillarDashboard(pillar));
+  const newFolderBtn = document.getElementById('newFolderBtnTop');
+  if(newFolderBtn) newFolderBtn.onclick = async ()=>{
+    const name = window.prompt('New folder name:');
+    if(!name || !name.trim()) return;
+    try{ await createFolder(pillar.id, null, name.trim()); openPillarDashboard(pillar); }
+    catch(err){ console.error(err); alert('Could not create the folder — please try again.'); }
+  };
+  const refreshBtn = document.getElementById('dashboardRefreshBtn');
+  if(refreshBtn) refreshBtn.onclick = async ()=>{
+    refreshBtn.textContent = '⟳ Refreshing…';
+    await loadFoldersAndDocs();
+    openPillarDashboard(pillar);
+  };
+  contentArea.scrollTop = 0;
+}
+
+// ---------- Folder page (breadcrumb, subfolders, files) ----------
+function renderFolderPage(folder){
+  clearActiveSub();
+  buildMenu(document.getElementById('menuFilter').value);
+  const pillar = PILLARS.find(p => p.id === folder.pillar);
+  const chain = folderBreadcrumb(folder);
+
+  // NEW: buildMenu() just rebuilt the entire sidebar from scratch, which
+  // collapses every pillar back to closed by default — that's what made
+  // the parent menu appear to collapse whenever a folder inside it was
+  // opened. Reopen this folder's pillar (and highlight the top-level
+  // folder in its chain, since that's what's actually shown in the
+  // sidebar — nested subfolders aren't listed there individually).
+  if(pillar){
+    const wrap = menu.querySelector(`.pillar[data-pillar="${pillar.id}"]`);
+    if(wrap){
+      wrap.classList.add('open');
+      const pbtn = wrap.querySelector('.pillar-btn');
+      if(pbtn) pbtn.classList.add('active-parent');
+      const topFolderId = chain.length ? chain[0].id : null;
+      if(topFolderId){
+        const fbtn = wrap.querySelector(`.sub-btn-folder[data-folder-id="${topFolderId}"]`);
+        if(fbtn) fbtn.classList.add('active');
+      }
+    }
+  }
+
+  crumbs.innerHTML = `<b class="crumb-home" data-go-home>OGE University</b> / <span class="crumb-link" data-go-pillar-dash="${pillar ? pillar.id : ''}">${pillar ? pillar.title : folder.pillar}</span> / ${chain.map((f,i) => i < chain.length-1 ? `<span class="crumb-link" data-go-folder="${f.id}">${escapeHtml(f.name)}</span>` : escapeHtml(f.name)).join(' / ')}`;
+
+  const subFolders = ALL_FOLDERS.filter(f => f.parent_id === folder.id);
+  const files = ALL_DOCS.filter(d => d.folder_id === folder.id);
+  const canManage = isAdmin();
+
+  const breadcrumbHtml = `<span class="pin">📍</span><span class="seg" data-back-pillar="1">${escapeHtml(pillar ? pillar.title : '')}</span><span class="sep">›</span>` +
+    chain.map((f,i) => `<span class="seg${i===chain.length-1?' leaf':''}" data-back-folder="${f.id}">${escapeHtml(f.name)}</span>`).join('<span class="sep">›</span>');
+
+  contentArea.innerHTML = `
+    <div class="doc-card">
+      <div class="doc-eyebrow">${pillar ? pillar.title : ''}</div>
+      <h2>📁 ${escapeHtml(folder.name)}</h2>
+      <div class="ui-path">${breadcrumbHtml}</div>
+      <div class="folder-toolbar">
+        ${canManage ? `<button class="tbtn add" id="folderUploadBtn">+ Upload Files</button>` : ''}
+        ${canManage ? `<button class="tbtn" id="folderNewSubBtn">+ New Folder</button>` : ''}
+        <button class="tbtn" id="folderRefreshBtn">⟳ Refresh</button>
+      </div>
+      ${canManage ? `<input type="file" id="folderFileInput" multiple style="display:none;" accept=".doc,.docx,.pdf,.xls,.xlsx,.csv,.ppt,.pptx">` : ''}
+      <div id="folderUploadStatus" class="folder-upload-status"></div>
+
+      ${subFolders.length ? `<div class="folder-grid">${subFolders.map(folderCardHtml).join('')}</div>` : ''}
+      ${files.length ? `<div class="file-grid">${files.map(fileCardHtml).join('')}</div>` : ''}
+      ${(!subFolders.length && !files.length) ? `<p class="folder-empty-hint">This folder is empty.${canManage ? ' Upload files or create a subfolder to get started.' : ''}</p>` : ''}
+    </div>
+  `;
+
+  const backPillar = contentArea.querySelector('[data-back-pillar]');
+  if(backPillar && pillar) backPillar.onclick = ()=> openPillarDashboard(pillar);
+  contentArea.querySelectorAll('[data-back-folder]').forEach(el=>{
+    el.onclick = ()=>{ const f = folderById(el.dataset.backFolder); if(f) renderFolderPage(f); };
+  });
+
+  const refreshBtn = document.getElementById('folderRefreshBtn');
+  if(refreshBtn) refreshBtn.onclick = async ()=>{
+    refreshBtn.textContent = '⟳ Refreshing…';
+    await loadFoldersAndDocs();
+    const fresh = folderById(folder.id);
+    if(fresh) renderFolderPage(fresh);
+    else if(pillar) openPillarOverview(pillar);
+  };
+
+  if(canManage){
+    const uploadBtn = document.getElementById('folderUploadBtn');
+    const fileInput = document.getElementById('folderFileInput');
+    if(uploadBtn && fileInput){
+      uploadBtn.onclick = ()=> fileInput.click();
+      fileInput.onchange = async (e)=>{
+        if(e.target.files && e.target.files.length){
+          await uploadFilesToFolder(folder, e.target.files);
+          e.target.value = '';
+        }
+      };
+    }
+    const newSubBtn = document.getElementById('folderNewSubBtn');
+    if(newSubBtn) newSubBtn.onclick = async ()=>{
+      const name = window.prompt('New folder name:');
+      if(!name || !name.trim()) return;
+      try{ await createFolder(folder.pillar, folder.id, name.trim()); renderFolderPage(folder); }
+      catch(err){ console.error(err); alert('Could not create the folder — please try again.'); }
+    };
+  }
+
+  wireFolderCards(contentArea, ()=> renderFolderPage(folder));
+  wireFileCards(contentArea, folder, ()=> renderFolderPage(folder));
+  contentArea.scrollTop = 0;
+}
+
+// ---------- File detail / preview page ----------
+function renderFileDetailPage(doc, folder){
+  clearActiveSub();
+  const pillar = PILLARS.find(p => p.id === folder.pillar);
+  const chain = folderBreadcrumb(folder);
+  crumbs.innerHTML = `<b class="crumb-home" data-go-home>OGE University</b> / <span class="crumb-link" data-go-pillar-dash="${pillar ? pillar.id : ''}">${pillar ? pillar.title : ''}</span> / ${chain.map(f => `<span class="crumb-link" data-go-folder="${f.id}">${escapeHtml(f.name)}</span>`).join(' / ')} / ${escapeHtml(doc.name)}`;
+
+  const ext = (doc.file_path || doc.name || '').split('.').pop().toLowerCase();
+  const officeExts = ['doc','docx','ppt','pptx','xls','xlsx'];
+  let viewerHtml = '';
+  if(doc.file_url){
+    if(ext === 'pdf'){
+      viewerHtml = `<div class="pptx-viewer-wrap"><iframe src="${escapeHtml(doc.file_url)}" loading="lazy" title="${escapeHtml(doc.name)}"></iframe></div>`;
+    } else if(officeExts.includes(ext)){
+      viewerHtml = `<div class="pptx-viewer-wrap">
+        <iframe src="https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(doc.file_url)}" loading="lazy" allowfullscreen title="${escapeHtml(doc.name)}"></iframe>
+        <div class="pptx-viewer-fallback">Viewer not loading? <a href="${escapeHtml(doc.file_url)}" target="_blank" rel="noopener">Open the original file directly</a>.</div>
+      </div>`;
+    }
+  }
+  if(!viewerHtml){
+    viewerHtml = `<p class="folder-empty-hint">No inline preview available for this file type — use Download to view it.</p>`;
+  }
+
+  const toolbar = isAdmin() ? `
+    <div class="card-toolbar">
+      <button class="tbtn" id="fileRenameBtn2">✎ Rename</button>
+      <button class="tbtn delete" id="fileDeleteBtn2">🗑 Delete</button>
+    </div>` : '';
+
+  contentArea.innerHTML = `
+    <div class="doc-card">
+      ${toolbar}
+      <div class="doc-eyebrow">${pillar ? pillar.title : ''}</div>
+      <h2>${fileTypeIcon(ext)} ${escapeHtml(doc.name)}</h2>
+      <div class="ui-path">
+        <span class="pin">📍</span>
+        <span class="seg" data-back-pillar="1">${escapeHtml(pillar ? pillar.title : '')}</span><span class="sep">›</span>
+        ${chain.map((f,i)=>`<span class="seg${i===chain.length-1?' leaf':''}" data-back-folder="${f.id}">${escapeHtml(f.name)}</span>`).join('<span class="sep">›</span>')}
+      </div>
+      <div class="pill-row" style="margin:0 0 14px 0;">
+        <span class="pill">${escapeHtml(doc.category || 'File')}</span>
+        <span class="pill">Uploaded by ${escapeHtml(doc.uploaded_by || 'Contributor')}</span>
+        <button class="tbtn" id="fileDownloadBtn2" style="margin-left:auto;">⬇ Download</button>
+      </div>
+      ${viewerHtml}
+    </div>
+  `;
+
+  document.getElementById('fileDownloadBtn2').onclick = ()=> downloadSingleFile(doc.file_url, doc.name);
+  const backPillar = contentArea.querySelector('[data-back-pillar]');
+  if(backPillar && pillar) backPillar.onclick = ()=> openPillarDashboard(pillar);
+  contentArea.querySelectorAll('[data-back-folder]').forEach(el=>{
+    el.onclick = ()=>{ const f = folderById(el.dataset.backFolder); if(f) renderFolderPage(f); };
+  });
+  if(isAdmin()){
+    document.getElementById('fileRenameBtn2').onclick = async ()=>{
+      const name = window.prompt('Rename file:', doc.name);
+      if(!name || !name.trim() || name.trim() === doc.name) return;
+      try{ await renameFileDb(doc, name.trim()); renderFileDetailPage(doc, folder); }
+      catch(err){ console.error(err); alert('Could not rename the file — please try again.'); }
+    };
+    document.getElementById('fileDeleteBtn2').onclick = async ()=>{
+      if(!window.confirm(`Delete "${doc.name}"? This cannot be undone.`)) return;
+      try{ await deleteFileDb(doc); renderFolderPage(folder); }
+      catch(err){ console.error(err); alert('Could not delete the file — please try again.'); }
+    };
+  }
+  contentArea.scrollTop = 0;
+}
+
+function openFileDetailById(doc){
+  const folder = folderById(doc.folder_id);
+  if(!folder){ alert("This file's folder could not be found (it may have been deleted)."); return; }
+  renderFileDetailPage(doc, folder);
+}
+
+// ---------- Search across uploaded files (regardless of folder) ----------
+function scoreDocEntry(doc, queryLower, tokens){
+  const name = (doc.name || '').toLowerCase();
+  const content = (doc.content || '').toLowerCase();
+  const folderPath = docFolderPathString(doc).toLowerCase();
+  let score = 0;
+  if(name === queryLower) score += 100;
+  if(name.includes(queryLower) && queryLower.length > 2) score += 30;
+  tokens.forEach(tok=>{
+    if(name.includes(tok)) score += 12;
+    if(folderPath.includes(tok)) score += 6;
+    if(content.includes(tok)) score += 3;
+  });
+  return score;
+}
+function searchDocuments(query){
+  const q = query.toLowerCase().trim();
+  const tokens = tokenize(q);
+  const scored = ALL_DOCS.map(d => ({ d, s: scoreDocEntry(d, q, tokens) }))
+                         .filter(x => x.s > 0)
+                         .sort((a,b) => b.s - a.s);
+  if(!scored.length) return [];
+  const topScore = scored[0].s;
+  const cutoff = Math.max(9, topScore * 0.35);
+  return scored.filter(x => x.s >= cutoff).slice(0,5).map(x => x.d);
+}
+function docFolderPathString(doc){
+  const folder = folderById(doc.folder_id);
+  if(!folder) return '';
+  const chain = folderBreadcrumb(folder);
+  const pillar = PILLARS.find(p => p.id === folder.pillar);
+  const parts = [];
+  if(pillar) parts.push(pillar.title);
+  chain.forEach(f => parts.push(f.name));
+  return parts.join(' › ');
+}
+function docMatchSnippet(doc, tokens){
+  const content = doc.content || '';
+  if(!content) return '';
+  const lower = content.toLowerCase();
+  let idx = -1;
+  for(const t of tokens){ idx = lower.indexOf(t); if(idx >= 0) break; }
+  if(idx < 0) idx = 0;
+  const start = Math.max(0, idx - 60);
+  const snippet = content.slice(start, start + 160).trim();
+  return (start > 0 ? '…' : '') + snippet + '…';
+}
+
+// Converts an HTML fragment's inner content to plain text while turning
+// <br> tags into real newlines and correctly decoding entities — used to
+// pull clean text back out of a diagram-like paragraph before boxing it.
+function htmlFragmentToPlainText(innerHtml){
+  const helper = document.createElement('div');
+  helper.innerHTML = innerHtml.replace(/<br\s*\/?>/gi, '\n');
+  return helper.textContent;
+}
+
+// ASCII/box-drawing flowcharts and architecture diagrams need a monospace,
+// whitespace-preserving block to stay readable — regular paragraphs don't.
+// This scans converted docx HTML and boxes up any paragraph that looks
+// like a diagram, leaving normal prose/headings/lists untouched.
+const DIAGRAM_PATTERN = /[▼┌┐└┘┼─│▲◀►→←]|(\+-{2,})|(-{4,})|(\|\s*.+\s*\|\s*.+\|)/;
+function wrapDiagramParagraphs(html){
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  tmp.querySelectorAll('p').forEach(p=>{
+    const plain = htmlFragmentToPlainText(p.innerHTML);
+    if(DIAGRAM_PATTERN.test(plain)){
+      const pre = document.createElement('pre');
+      pre.className = 'kb-diagram';
+      pre.textContent = plain;
+      p.replaceWith(pre);
+    }
+  });
+  return tmp.innerHTML;
+}
+
+// Word (.docx) — converts to real HTML (headings, bullet/numbered lists,
+// bold/italic, tables) via mammoth so it renders with the same design as
+// every other tab, then boxes up any diagram-style paragraphs separately.
+async function extractDocx(file){
+  const buf = await file.arrayBuffer();
+  const styleMap = [
+    "p[style-name='Heading 1'] => h3:fresh",
+    "p[style-name='Heading 2'] => h3:fresh",
+    "p[style-name='Heading 3'] => h3:fresh",
+    "p[style-name='Heading 4'] => h3:fresh",
+    "p[style-name='Title'] => h3:fresh"
+  ];
+  const converted = await mammoth.convertToHtml({ arrayBuffer: buf }, { styleMap });
+  let html = converted.value.replace(/<h[1-6]>/g,'<h3>').replace(/<\/h[1-6]>/g,'</h3>');
+  html = wrapDiagramParagraphs(html);
+  const rawText = await mammoth.extractRawText({ arrayBuffer: buf });
+  return { bodyHtml: html, plainText: rawText.value };
+}
+
+// PDF — pdf.js gives text as small fragments with no structural markup
+// (no real concept of "heading" or "paragraph"), so this reconstructs both:
+// MODIFIED (layout rewrite): previously every PDF was dumped into a single
+// <pre> block — readable but with no headings/titles and, before the
+// earlier line-break fix, no line breaks either. This now:
+//   1) groups fragments into lines by Y position (as before), and tracks
+//      each line's font size from its text-matrix scale,
+//   2) finds the most common font size on the page (the "body text" size),
+//   3) treats meaningfully larger, short lines as headings (<h3>), and
+//      groups the remaining lines into normal paragraphs (<p>),
+//   4) still boxes up anything that looks like an ASCII/box-drawing
+//      diagram (reusing the same DIAGRAM_PATTERN check used for Word docs),
+// so PDFs render with real titles/headings/paragraphs like every other
+// pillar, instead of one long monospace block.
+async function extractPdf(file){
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  const buf = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+
+  const allLines = []; // { text, size }
+  let plainText = '';
+
+  for(let i=1;i<=pdf.numPages;i++){
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    let lastY = null;
+    let curLine = '';
+    let curSize = 0;
+
+    const pushLine = ()=>{
+      const trimmed = curLine.trim();
+      if(trimmed){ allLines.push({ text: trimmed, size: curSize }); plainText += trimmed + '\n'; }
+    };
+
+    content.items.forEach(item=>{
+      const y = item.transform[5];
+      const size = Math.abs(item.transform[3]) || Math.abs(item.transform[0]) || 0;
+      if(lastY !== null && Math.abs(y - lastY) > 2){
+        pushLine();
+        curLine = '';
+        curSize = 0;
+      } else if(curLine && !/[\s\n]$/.test(curLine)){
+        curLine += ' ';
+      }
+      curLine += item.str;
+      curSize = Math.max(curSize, size);
+      lastY = y;
+    });
+    pushLine();
+    plainText += '\n';
+  }
+
+  if(!allLines.length){
+    return { bodyHtml: '<p><i>No extractable text was found in this file.</i></p>', plainText: '' };
+  }
+
+  // "Body text" size = the most common line size on the page(s) — headings
+  // are lines meaningfully larger than this.
+  const sizeCounts = {};
+  allLines.forEach(l=>{
+    const rounded = Math.round(l.size);
+    sizeCounts[rounded] = (sizeCounts[rounded]||0) + 1;
+  });
+  let bodySize = 0, bodyCount = 0;
+  Object.entries(sizeCounts).forEach(([sz,count])=>{
+    if(count > bodyCount){ bodyCount = count; bodySize = Number(sz); }
+  });
+
+  let html = '';
+  let paraBuffer = [];
+  const flushPara = ()=>{
+    if(!paraBuffer.length) return;
+    const paraText = paraBuffer.join(' ');
+    html += DIAGRAM_PATTERN.test(paraText)
+      ? `<pre class="kb-diagram">${escapeHtml(paraText)}</pre>`
+      : `<p>${escapeHtml(paraText)}</p>`;
+    paraBuffer = [];
+  };
+
+  allLines.forEach(line=>{
+    const isHeading = bodySize > 0 && line.size >= bodySize * 1.15 && line.text.length < 100 && line.text.length > 1;
+    if(isHeading){
+      flushPara();
+      html += `<h3>${escapeHtml(line.text)}</h3>`;
+    } else {
+      paraBuffer.push(line.text);
+    }
+  });
+  flushPara();
+
+  const preview = html.length > 40000
+    ? html.slice(0,40000) + '<p><i>(Content truncated for display — full text is indexed for search.)</i></p>'
+    : html;
+
+  return { bodyHtml: preview, plainText };
+}
+
+// Excel/CSV — each sheet is rendered as a real HTML table, so it picks up
+// the same table styling used everywhere else in the knowledge centre.
+async function extractExcel(file){
+  const buf = await file.arrayBuffer();
+  const wb = XLSX.read(buf, { type: 'array' });
+  let html = '', plain = '';
+  wb.SheetNames.forEach(name=>{
+    const sheet = wb.Sheets[name];
+    const csv = XLSX.utils.sheet_to_csv(sheet);
+    plain += `--- Sheet: ${name} ---\n${csv}\n\n`;
+    const rawHtml = XLSX.utils.sheet_to_html(sheet);
+    const tableMatch = rawHtml.match(/<table[\s\S]*?<\/table>/i);
+    const tableHtml = tableMatch ? tableMatch[0] : `<pre class="kb-diagram">${escapeHtml(csv)}</pre>`;
+    html += `<h3>Sheet: ${escapeHtml(name)}</h3><div style="overflow-x:auto;">${tableHtml}</div>`;
+  });
+  return { bodyHtml: html, plainText: plain };
+}
+
+// PowerPoint (.pptx) — a .pptx is a zip of slide XML files, so JSZip unpacks
+// it in-browser. Each slide is rendered as its own slide-styled card (title
+// placeholder detected where possible, body text as bullets), and — unlike
+// a plain text dump — native charts, tables, and embedded pictures on the
+// slide are also pulled out and rendered, since those carry real content
+// (e.g. a burndown chart) that pure text extraction would silently drop.
+function renderPptxSlideBox(num, title, bodyLines, extraHtml){
+  const hasExtra = !!(extraHtml && extraHtml.trim());
+  const bodyHtml = bodyLines.length
+    ? `<ul class="pptx-slide-body">${bodyLines.map(l => `<li>${escapeHtml(l)}</li>`).join('')}</ul>`
+    : (hasExtra ? '' : `<p class="pptx-slide-body pptx-slide-empty"><em>(No additional text on this slide.)</em></p>`);
+  return `
+    <div class="pptx-slide">
+      <span class="pptx-slide-index">Slide ${num}</span>
+      <div class="pptx-slide-title">${escapeHtml(title)}</div>
+      ${bodyHtml}
+      ${extraHtml || ''}
+    </div>`;
+}
+
+// slideFileName e.g. 'ppt/slides/slide3.xml' -> map of rId -> relationship Target
+async function getSlideRelMap(zip, slideFileName){
+  const relsPath = slideFileName.replace('slides/slide', 'slides/_rels/slide') + '.rels';
+  const relsFile = zip.file(relsPath);
+  if(!relsFile) return {};
+  const relsXmlText = await relsFile.async('text');
+  const relsXml = new DOMParser().parseFromString(relsXmlText, 'application/xml');
+  const map = {};
+  Array.from(relsXml.getElementsByTagName('Relationship')).forEach(r => {
+    map[r.getAttribute('Id')] = r.getAttribute('Target');
+  });
+  return map;
+}
+
+// Resolves a relationship Target (often relative, e.g. '../charts/chart1.xml')
+// against the slide's own zip path into an absolute path inside the package.
+function resolveZipPath(basePath, relTarget){
+  const stack = basePath.split('/').slice(0, -1);
+  relTarget.split('/').forEach(part => {
+    if(part === '..') stack.pop();
+    else if(part !== '.') stack.push(part);
+  });
+  return stack.join('/');
+}
+
+function firstChartText(el){
+  return el ? Array.from(el.getElementsByTagName('a:t')).map(t => t.textContent).join('') : '';
+}
+// Category/series/value cells store their text in <c:v>, not <a:t> (that's
+// only used for rich-text titles) — separate helper so we read the right tag.
+function firstCV(el){
+  return el ? (el.getElementsByTagName('c:v')[0]?.textContent || '') : '';
+}
+
+const PPTX_CHART_TYPE_TAGS = {
+  'c:barChart':'Bar Chart', 'c:bar3DChart':'3D Bar Chart',
+  'c:lineChart':'Line Chart', 'c:line3DChart':'3D Line Chart',
+  'c:pieChart':'Pie Chart', 'c:pie3DChart':'3D Pie Chart',
+  'c:doughnutChart':'Doughnut Chart', 'c:areaChart':'Area Chart',
+  'c:area3DChart':'3D Area Chart', 'c:scatterChart':'Scatter Chart',
+  'c:radarChart':'Radar Chart', 'c:stockChart':'Stock Chart'
+};
+
+// Reads a native PowerPoint chart part (ppt/charts/chartN.xml) and pulls out
+// its title, type, category labels, and series values — real chart data,
+// not just a picture — so it can be shown as a data table.
+async function extractChartData(zip, chartPath){
+  const chartFile = zip.file(chartPath);
+  if(!chartFile) return null;
+  const xmlText = await chartFile.async('text');
+  const xml = new DOMParser().parseFromString(xmlText, 'application/xml');
+
+  const title = firstChartText(xml.getElementsByTagName('c:title')[0]);
+  let chartType = 'Chart';
+  for(const tag in PPTX_CHART_TYPE_TAGS){
+    if(xml.getElementsByTagName(tag).length){ chartType = PPTX_CHART_TYPE_TAGS[tag]; break; }
+  }
+
+  const seriesEls = Array.from(xml.getElementsByTagName('c:ser'));
+  const seriesNames = [];
+  let categories = [];
+  const seriesValues = [];
+
+  seriesEls.forEach((ser, si) => {
+    const vEl = ser.getElementsByTagName('c:tx')[0];
+    seriesNames.push(firstCV(vEl) || `Series ${si + 1}`);
+
+    if(!categories.length){
+      const catEl = ser.getElementsByTagName('c:cat')[0];
+      if(catEl){
+        categories = Array.from(catEl.getElementsByTagName('c:pt'))
+          .map(pt => ({ idx: parseInt(pt.getAttribute('idx'), 10), v: firstCV(pt) }))
+          .sort((a,b) => a.idx - b.idx)
+          .map(o => o.v);
+      }
+    }
+
+    const valEl = ser.getElementsByTagName('c:val')[0];
+    const values = valEl ? Array.from(valEl.getElementsByTagName('c:pt'))
+      .map(pt => ({ idx: parseInt(pt.getAttribute('idx'), 10), v: firstCV(pt) })) : [];
+    seriesValues.push(values);
+  });
+
+  return { title, chartType, seriesNames, categories, seriesValues };
+}
+
+function renderChartHtml(chart){
+  if(!chart || !chart.seriesValues.length){
+    return `<p class="pptx-slide-empty"><em>📊 (This slide contains a chart, but its data couldn't be read.)</em></p>`;
+  }
+  const rowCount = Math.max(chart.categories.length, ...chart.seriesValues.map(v => v.length));
+  let rows = '';
+  for(let r = 0; r < rowCount; r++){
+    const cat = chart.categories[r] !== undefined ? chart.categories[r] : `#${r+1}`;
+    const cells = chart.seriesValues.map(vals => {
+      const found = vals.find(p => p.idx === r);
+      return `<td>${escapeHtml(found ? found.v : '')}</td>`;
+    }).join('');
+    rows += `<tr><td>${escapeHtml(cat)}</td>${cells}</tr>`;
+  }
+  const headerCells = chart.seriesNames.map(n => `<th>${escapeHtml(n)}</th>`).join('');
+  return `
+    <div class="pptx-chart">
+      <div class="pptx-chart-label">📊 ${escapeHtml(chart.chartType)}${chart.title ? ' — ' + escapeHtml(chart.title) : ''}</div>
+      <div style="overflow-x:auto;">
+        <table class="pptx-chart-table"><thead><tr><th>Category</th>${headerCells}</tr></thead><tbody>${rows}</tbody></table>
+      </div>
+    </div>`;
+}
+
+const PPTX_IMAGE_MIME = { png:'image/png', jpg:'image/jpeg', jpeg:'image/jpeg', gif:'image/gif', bmp:'image/bmp' };
+
+// Embeds a picture shape's actual image (as a data: URI) so slide graphics
+// show up for real, not just as a text gap. Vector metafiles (EMF/WMF) —
+// which browsers can't rasterize — get a friendly fallback note instead.
+async function extractPictureDataUri(zip, imgPath){
+  const ext = (imgPath.split('.').pop() || '').toLowerCase();
+  const mime = PPTX_IMAGE_MIME[ext];
+  if(!mime) return null;
+  const imgFile = zip.file(imgPath);
+  if(!imgFile) return null;
+  const base64 = await imgFile.async('base64');
+  return `data:${mime};base64,${base64}`;
+}
+
+async function extractPptx(file){
+  const buf = await file.arrayBuffer();
+  const zip = await JSZip.loadAsync(buf);
+  const slideFiles = Object.keys(zip.files)
+    .filter(name => /^ppt\/slides\/slide\d+\.xml$/.test(name))
+    .sort((a,b)=>{
+      const na = parseInt(a.match(/slide(\d+)\.xml/)[1], 10);
+      const nb = parseInt(b.match(/slide(\d+)\.xml/)[1], 10);
+      return na - nb;
+    });
+
+  const parser = new DOMParser();
+  let html = '', plain = '';
+
+  for(let i=0;i<slideFiles.length;i++){
+    const slidePath = slideFiles[i];
+    const xmlText = await zip.file(slidePath).async('text');
+    const xml = parser.parseFromString(xmlText, 'application/xml');
+    const relMap = await getSlideRelMap(zip, slidePath);
+
+    const spTree = xml.getElementsByTagName('p:spTree')[0];
+    const shapeNodes = spTree
+      ? Array.from(spTree.childNodes).filter(n => n.nodeType === 1)
+      : Array.from(xml.getElementsByTagName('p:sp'));
+
+    let title = '';
+    const bodyLines = [];
+    const extraBlocks = [];
+
+    for(const node of shapeNodes){
+      const tag = node.tagName;
+
+      if(tag === 'p:sp'){
+        const phEl = node.getElementsByTagName('p:ph')[0];
+        const phType = phEl ? (phEl.getAttribute('type') || '') : '';
+        const shapeLines = Array.from(node.getElementsByTagName('a:p'))
+          .map(p => Array.from(p.getElementsByTagName('a:t')).map(t => t.textContent).join(''))
+          .filter(l => l.trim().length > 0);
+        if(!shapeLines.length) continue;
+        if(!title && (phType === 'title' || phType === 'ctrTitle')){
+          title = shapeLines.join(' ');
+        } else {
+          bodyLines.push(...shapeLines);
+        }
+
+      } else if(tag === 'p:graphicFrame'){
+        const chartEl = node.getElementsByTagName('c:chart')[0];
+        if(chartEl){
+          const rId = chartEl.getAttribute('r:id');
+          const target = rId && relMap[rId];
+          if(target){
+            try{
+              const chart = await extractChartData(zip, resolveZipPath(slidePath, target));
+              extraBlocks.push(renderChartHtml(chart));
+            } catch(e){ console.warn('Chart parse failed:', e); }
+          }
+        } else {
+          const tbl = node.getElementsByTagName('a:tbl')[0];
+          if(tbl){
+            const rowsHtml = Array.from(tbl.getElementsByTagName('a:tr')).map(tr => {
+              const cells = Array.from(tr.getElementsByTagName('a:tc')).map(tc => {
+                const txt = Array.from(tc.getElementsByTagName('a:t')).map(t => t.textContent).join('');
+                return `<td>${escapeHtml(txt)}</td>`;
+              }).join('');
+              return `<tr>${cells}</tr>`;
+            }).join('');
+            extraBlocks.push(`<div style="overflow-x:auto;"><table class="pptx-chart-table">${rowsHtml}</table></div>`);
+          }
+        }
+
+      } else if(tag === 'p:pic'){
+        const blip = node.getElementsByTagName('a:blip')[0];
+        const rId = blip ? blip.getAttribute('r:embed') : null;
+        const target = rId && relMap[rId];
+        if(target){
+          try{
+            const dataUri = await extractPictureDataUri(zip, resolveZipPath(slidePath, target));
+            extraBlocks.push(dataUri
+              ? `<div class="pptx-slide-image"><img src="${dataUri}" alt="Slide image"></div>`
+              : `<p class="pptx-slide-empty"><em>🖼 (This slide has an image in a format that can't be previewed here — open the original file to view it.)</em></p>`);
+          } catch(e){ console.warn('Image extract failed:', e); }
+        }
+      }
+    }
+
+    // No title placeholder found (e.g. a freeform layout) — fall back to
+    // treating the first line of text on the slide as its title.
+    if(!title && bodyLines.length) title = bodyLines.shift();
+    if(!title) title = `Slide ${i+1}`;
+
+    html += renderPptxSlideBox(i+1, title, bodyLines, extraBlocks.join(''));
+    plain += `--- Slide ${i+1}: ${title} ---\n${bodyLines.join('\n')}\n\n`;
+  }
+
+  return {
+    bodyHtml: html || '<p>(No slides found in this file.)</p>',
+    plainText: plain
+  };
+}
+// ================= SUPABASE STORAGE UPLOAD =================
+// MODIFIED: now returns both the public URL and the storage path (the path
+// is needed later to delete the underlying file when a document is removed).
+async function uploadFileToSupabase(file) {
+  const fileName = Date.now() + "_" + file.name;
+
+  const { data, error } = await sb.storage
+    .from("knowledge-files")
+    .upload(fileName, file);
+
+  if (error) {
+    console.error(error);
+    throw error;
+  }
+
+  const { data: urlData } = sb.storage
+    .from("knowledge-files")
+    .getPublicUrl(fileName);
+
+  return { url: urlData.publicUrl, path: fileName };
+}
+// ===================================================
+
+// MODIFIED: the old sidebar upload handler (handleKbFiles / #kbFileInput)
+// and the old flat saveDocumentToDatabase() have been removed — uploads now
+// only happen inside a folder, via uploadFilesToFolder() / saveDocumentRow()
+// (see the FOLDER-BASED DOCUMENT MANAGEMENT section above).
+
+/* =========================================================================
+   CHAT / SEARCH ASSISTANT
+   ========================================================================= */
+const chatToggle = document.getElementById('chat-toggle');
+const chatPanel = document.getElementById('chat-panel');
+const chatClose = document.getElementById('chatClose');
+const chatLog = document.getElementById('chat-log');
+const chatInput = document.getElementById('chatInput');
+const chatSend = document.getElementById('chatSend');
+
+chatToggle.onclick = ()=>{ chatPanel.classList.add('open'); chatInput.focus(); };
+chatClose.onclick = ()=> chatPanel.classList.remove('open');
+
+function addMsg(html, cls){
+  const d = document.createElement('div');
+  d.className = 'msg ' + cls;
+  d.innerHTML = html;
+  chatLog.appendChild(d);
+  chatLog.scrollTop = chatLog.scrollHeight;
+  return d;
+}
+
+// (INDEX is declared and maintained near the top of the script, via rebuildIndex())
+
+// MODIFIED: added generic connector/collector words ("fetch", "all",
+// "related", "documents", etc.) that add noise but no real signal to a
+// query like "fetch me all automation related documents" — without these,
+// "documents" alone could incidentally match dozens of unrelated items.
+const STOPWORDS = new Set([
+  "a","an","the","give","me","show","please","can","you","i","need","want","find","get",
+  "for","of","on","in","to","is","are","what","whats","tell","about","fetch","all","every",
+  "any","related","relating","document","documents","docs","doc","file","files","info",
+  "information","stuff","things","thing"
+]);
+
+function tokenize(s){
+  return s.toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(w=>w && !STOPWORDS.has(w));
+}
+
+// MODIFIED: for uploaded documents, `tags` contains the entire extracted
+// document text (up to 6000 chars) — so a token that merely appears once,
+// anywhere, in a long document was scoring the same way (+6) as it would
+// for a short, focused item where that word is clearly central. That's why
+// a Weekly Status Report that just mentions "automation" in passing could
+// rank almost as high as a document that's actually about automation.
+// Tag-hit weight is reduced (6 → 3) and title-hit weight increased (8 → 10)
+// to widen the gap between "this is what it's about" and "this word
+// happens to appear in it somewhere" — the real fix is the relative cutoff
+// applied in searchKB() below, which drops weak matches entirely rather
+// than listing them as "possible matches".
+function scoreEntry(entry, queryLower, tokens){
+  const title = entry.item.title.toLowerCase();
+  const pillarTitle = entry.pillar.title.toLowerCase();
+  const tags = entry.item.tags;
+  let score = 0;
+  if (title === queryLower) score += 100;
+  if (queryLower.includes(title)) score += 40;
+  if (title.includes(queryLower) && queryLower.length>3) score += 25;
+  // A document filed directly under a pillar named after the query (e.g.
+  // "Automation" pillar for an "automation documents" query) is strong
+  // relevance signal in its own right — weighted well above a single
+  // incidental word match so it isn't filtered out by the cutoff below.
+  if (pillarTitle === queryLower) score += 30;
+  tokens.forEach(tok=>{
+    if (title.includes(tok)) score += 10;
+    if (tags.includes(tok)) score += 3;
+    if (pillarTitle.includes(tok)) score += 14;
+  });
+  return score;
+}
+
+// MODIFIED: previously returned every match with score > 0, capped at 5 —
+// so a handful of only-tangentially-related documents (matched purely on
+// one incidental word buried in their full text) always got shown
+// alongside the genuinely relevant ones. This now keeps the top result,
+// then only keeps additional results that are still reasonably close to
+// it (at least 35% of the top score, with a sensible floor) — a document
+// that's clearly about the query (by title or pillar) stays; one that
+// just happens to mention a word once in passing gets dropped instead of
+// shown as a "possible match".
+function searchKB(query){
+  const q = query.toLowerCase().trim();
+  const tokens = tokenize(q);
+  const scored = INDEX.map(e=>({e, s:scoreEntry(e, q, tokens)}))
+                       .filter(x=>x.s>0)
+                       .sort((a,b)=>b.s-a.s);
+  if(!scored.length) return [];
+  const topScore = scored[0].s;
+  const cutoff = Math.max(9, topScore * 0.35);
+  return scored.filter(x=>x.s >= cutoff).slice(0,5).map(x=>x.e);
+}
+
+function plainSnippet(html){
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  const p = tmp.querySelector('p');
+  let text = p ? p.textContent : tmp.textContent;
+  text = text.trim().replace(/\s+/g,' ');
+  return text.length>140 ? text.slice(0,140)+'…' : text;
+}
+
+function handleQuery(query){
+  addMsg(escapeHtml(query), 'user');
+
+  // MODIFIED: chatbot search now only searches folders/files — the single
+  // active content system. Curated PILLARS[].items content used to also be
+  // searched here (searchKB/INDEX), but that content has no reachable page
+  // in the sidebar or dashboard anymore (both now show folders only), so
+  // surfacing it in search was effectively showing "removed" content with
+  // a dead-end result. Uploading/adding a file or deleting one is
+  // reflected immediately, since this always reads the live ALL_DOCS array.
+  const docResults = searchDocuments(query);
+
+  if(docResults.length===0){
+    addMsg(`I couldn't find that in OGE University yet. Try browsing a pillar's folders on the left, or rephrase your question.`, 'bot');
+    return;
+  }
+
+  const tokens = tokenize(query);
+  const b = addMsg(`📁 Found ${docResults.length===1?'this':'these'} in your files:`, 'bot');
+  docResults.forEach(doc=>{
+    const ext = (doc.file_path || doc.name || '').split('.').pop();
+    const row = document.createElement('div');
+    row.className = 'doc-search-result';
+    row.innerHTML = `
+      <div class="dsr-name">${fileTypeIcon(ext)} ${escapeHtml(doc.name)}</div>
+      <div class="dsr-path">${escapeHtml(docFolderPathString(doc))}</div>
+      ${doc.content ? `<div class="dsr-snippet">"${escapeHtml(docMatchSnippet(doc, tokens))}"</div>` : ''}
+      <a class="open-link" data-open>Open file →</a>
+    `;
+    row.querySelector('.open-link').onclick = ()=> openFileDetailById(doc);
+    b.appendChild(row);
+  });
+}
+
+function escapeHtml(s){
+  return s.replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+chatSend.onclick = ()=>{
+  const v = chatInput.value.trim();
+  if(!v) return;
+  chatInput.value='';
+  handleQuery(v);
+};
+chatInput.addEventListener('keydown', e=>{
+  if(e.key==='Enter'){ chatSend.click(); }
+});
+
+// Greeting
+addMsg(`Hi! I'm the OGE University assistant. Ask me for anything in the knowledge centre — e.g. <i>"give me the test plan template"</i> or <i>"defect management SOP"</i>.`, 'bot');
+</script>
+</body>
+</html>
